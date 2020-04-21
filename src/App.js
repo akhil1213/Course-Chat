@@ -26,3 +26,4 @@ function App(props) {
 
 
 export default App;
+//https://dev.to/rubiin/ubuntu-increase-inotify-watcher-file-watch-limit-kf4

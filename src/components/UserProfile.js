@@ -12,7 +12,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+import uuid from 'uuid'
 //import logoimage from '../images/logoimage.jpeg';
 
 //how to pass a link to listitem component onclick https://stackoverflow.com/questions/47206639/how-to-add-a-link-to-a-list-in-material-ui-1-0
@@ -45,6 +45,15 @@ class UserProfile extends React.Component{
         window.addEventListener('popstate', function (event){
             window.history.pushState(null, document.title,  window.location.href);
         });
+        axios.get('http://www.localhost:5000/'+this.props.location.state.username)
+        .then( (response) => {
+            console.log("akhil")
+            console.log(response.data);
+            this.setState({classes:response.data});
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
         // fetch('api/courses/')
         //     .then(response => {
         //     if (response.status !== 200) {
@@ -71,6 +80,12 @@ class UserProfile extends React.Component{
         };
         this.state.classes.push(newClass);
         this.setState({classes:this.state.classes});
+        axios.post('http://www.localhost:5000/',{
+            courseName:this.state.class,
+            professorName:this.state.professorName,
+            time:this.state.time,
+            username:this.props.location.state.username
+        });
         // const conf = {
         //     method: "post",
         //     body: JSON.stringify(newClass),
@@ -122,7 +137,7 @@ class UserProfile extends React.Component{
                                     <AddBoxIcon/>
                                 </IconButton>
                                 <Dialog open={this.state.isModalOpened} onClose={this.closeModal} aria-labelledby="form-dialog-title">
-                                    <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                                    <DialogTitle id="form-dialog-title">Enter a Class</DialogTitle>
                                     <DialogContent>
                                         {/* After debugging for an hour , the dialog should not be inside
                                          icon button because inside the dialog there is a cancel button and for some reason icon buttons onclick method
@@ -216,3 +231,5 @@ class UserProfile extends React.Component{
 }
 export default UserProfile;
 
+//Graphql,redis, mern stack, mongodb, 
+//graphql is for complicated queries
