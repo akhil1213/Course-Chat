@@ -18,10 +18,6 @@ const ClassSchema = new Schema({
         type:String,
         required:true
     },
-    courseId:{
-        type:String,
-        required:true,
-    }
 });
 //if we don't export, we can't import.
 module.exports = Class = mongoose.model('class', ClassSchema);//now we can bring this model into other files.

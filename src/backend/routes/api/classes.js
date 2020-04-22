@@ -18,10 +18,17 @@ router.get("/:username", (req,res) => {
     Class.find({ username:req.params.username})
         .then(items => res.json(items));
 });
-router.get("/:courseName/:profName", (req,res) => {
+router.get("/course/:id", (req,res) => {
     // console.log(req.params.username)
-    Class.find({ courseName:req.params.courseName, profName:req.params.profName})
-        .then(items => res.json(items));
+    Class.find({ _id:req.params.id})
+        .then(classInfo => {
+            console.log(classInfo[0])
+            classInfo = classInfo[0]
+            Class.find({courseName:classInfo.courseName, profName:classInfo.profName, time:classInfo.time})
+                .then(usersInClass =>{
+                    res.json(usersInClass)
+                })
+        });
 });
 //select * from classes where username = "StudentA's username"
 // @route POST api/items

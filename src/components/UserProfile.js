@@ -23,7 +23,7 @@ class UserProfile extends React.Component{
         super(props);
         this.state={
             isModalOpened:false,
-            professorName:'',
+            profName:'',
             class:'',
             time:'',
             classes:[]
@@ -54,17 +54,9 @@ class UserProfile extends React.Component{
         .catch(function (error) {
             console.log(error);
         });
-        // fetch('api/courses/')
-        //     .then(response => {
-        //     if (response.status !== 200) {
-        //         console.log(response.status)
-        //     }
-        //         return response.json();
-        //     })
-        //      .then(body => this.setState({classes:body}));
     }
     updateProfessorname = (event) => {
-        this.setState({professorName: event.target.value});
+        this.setState({profName: event.target.value});
     }
     updateClass = (event) => {
         this.setState({class: event.target.value});
@@ -75,19 +67,19 @@ class UserProfile extends React.Component{
     addClass = () => {
         const newClass = {
             courseName:this.state.class,
-            professorName:this.state.professorName,
+            profName:this.state.profName,
             time:this.state.time,
             username:this.props.location.state.username
         };
         this.state.classes.push(newClass);
         this.setState({classes:this.state.classes});
 
-        axios.post('localhost:5000/',{
+        axios.post('http://localhost:5000/',{
             courseName:this.state.class,
-            professorName:this.state.professorName,
+            profName:this.state.profName,
             time:this.state.time,
             username:this.props.location.state.username
-        }).catch( (error) => {
+        }).then().catch( (error) => {
             console.log(error);
         });
         // const conf = {
@@ -197,8 +189,9 @@ class UserProfile extends React.Component{
                                             to={{
                                                 pathname: '/class',
                                                 state:{
+                                                    classId:classObject._id,
                                                     className:classObject.courseName,
-                                                    professorName:classObject.professorName,
+                                                    profName:classObject.profName,
                                                     time:classObject.time
                                                 },
                                               }}
@@ -210,7 +203,7 @@ class UserProfile extends React.Component{
                                                 primary={classObject.courseName}
                                             />
                                             <ListItemText
-                                                primary={classObject.professorName}
+                                                primary={classObject.profName}
                                             />
                                             <ListItemText
                                                 primary={classObject.time}
