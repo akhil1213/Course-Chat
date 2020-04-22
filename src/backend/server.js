@@ -11,7 +11,7 @@ mongoose.connect('mongodb+srv://akhil:akhil123@cluster0-ucvbp.mongodb.net/test?r
     console.log(err);
 })
 const routes = require('./routes/api/classes')
-app.use('', routes);
+app.use('/', routes);
 app.listen(5000, function(){
     console.log("course chat working server");
 });

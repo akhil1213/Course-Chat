@@ -9,12 +9,18 @@ const Class = require('../../models/class');
 //@desc Get all items
 // @access public
 
-// router.get("/", (req,res) => {
-//     Class.find()
-//         .then(items => res.json(items));
-// });
+router.get("/", (req,res) => {
+    Class.find()
+        .then(items => res.json(items));
+});
 router.get("/:username", (req,res) => {
-    Class.find({ _username:req.params.username})
+    console.log(req.params.username)
+    Class.find({ username:req.params.username})
+        .then(items => res.json(items));
+});
+router.get("/:courseName/:profName", (req,res) => {
+    // console.log(req.params.username)
+    Class.find({ courseName:req.params.courseName, profName:req.params.profName})
         .then(items => res.json(items));
 });
 //select * from classes where username = "StudentA's username"
@@ -35,6 +41,7 @@ router.get("/:username", (req,res) => {
 //     required: true,
 // },
 router.post("/", (req,res) => {
+    console.log("post worked!s")
     const newClass = new Class({
         courseName: req.body.courseName,
         profName:req.body.profName,

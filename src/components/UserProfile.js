@@ -76,15 +76,19 @@ class UserProfile extends React.Component{
         const newClass = {
             courseName:this.state.class,
             professorName:this.state.professorName,
-            time:this.state.time
+            time:this.state.time,
+            username:this.props.location.state.username
         };
         this.state.classes.push(newClass);
         this.setState({classes:this.state.classes});
-        axios.post('http://www.localhost:5000/',{
+
+        axios.post('localhost:5000/',{
             courseName:this.state.class,
             professorName:this.state.professorName,
             time:this.state.time,
             username:this.props.location.state.username
+        }).catch( (error) => {
+            console.log(error);
         });
         // const conf = {
         //     method: "post",
