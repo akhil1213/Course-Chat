@@ -1,8 +1,9 @@
-var express = require("express");
-var app = express();
-var mongoose = require('mongoose');
+const express = require("express");
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-var cors = require('cors');
+const cors = require('cors');
+const app = express();
+
 app.use(bodyParser.json());
 app.use(cors());
 mongoose.connect('mongodb+srv://akhil:akhil123@cluster0-ucvbp.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true,useUnifiedTopology: true, useFindAndModify:false}).then(()=>{
@@ -12,6 +13,8 @@ mongoose.connect('mongodb+srv://akhil:akhil123@cluster0-ucvbp.mongodb.net/test?r
 })
 const routes = require('./routes/api/classes')
 app.use('/', routes);
+
+
 app.listen(5000, function(){
     console.log("course chat working server");
 });

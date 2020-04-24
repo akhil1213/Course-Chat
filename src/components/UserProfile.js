@@ -192,7 +192,8 @@ class UserProfile extends React.Component{
                                                     classId:classObject._id,
                                                     className:classObject.courseName,
                                                     profName:classObject.profName,
-                                                    time:classObject.time
+                                                    time:classObject.time,
+                                                    username:this.props.location.state.username
                                                 },
                                               }}
                                             onClick={() => { console.log('onClick'); }}

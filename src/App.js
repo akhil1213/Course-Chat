@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Nav from './components/Nav';
 import UserProfile from './components/UserProfile';
 import ClassComponent from './components/ClassComponent'
+import Chat from './components/Chat/Chat'
 import {useParams} from 'react-router';
 
 
@@ -19,6 +20,7 @@ function App(props) {
         <Route path="/signup" component={Signup}/>
         <Route path="/profile" component={UserProfile}/>
         <Route path="/class" component={ClassComponent}/>
+        <Route path="/chat" component={Chat}/>
       </div>
     </Router>
   );//use exact /signup doesnt bring along feed component
