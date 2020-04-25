@@ -11,8 +11,10 @@ mongoose.connect('mongodb+srv://akhil:akhil123@cluster0-ucvbp.mongodb.net/test?r
 }).catch(err => {
     console.log(err);
 })
-const routes = require('./routes/api/classes')
-app.use('/', routes);
+const classRoutes = require('./routes/api/classes')
+const userRoutes = require('./routes/api/users')
+app.use('/', classRoutes);
+app.use('/', userRoutes);
 
 
 app.listen(5000, function(){

@@ -22,14 +22,15 @@ function Signup(props) {
     const [errormessage,setErrorMessage] = useState(false);
     const [isLogged,setIsLogged] = useState(false);
     const dispatch = useDispatch();
-  function handleClick(e){
-    if(!validateForm())
-        e.preventDefault();
-    else
-        props.signIn();
-    /*if validatedform is false so its not validated then you prevent the 
-    default action from happening which is going to user profile page.*/
-  }
+    function handleClick(e){
+      if(!validateForm())
+          e.preventDefault();
+      else
+          props.signIn();//signup
+          //send user to mongodb using axios. 
+      /*if validatedform is false so its not validated then you prevent the 
+      default action from happening which is going to user profile page.*/
+    }
   function validateForm(){
     setErrorMessage(true);
       if(fullname.length === 0)
