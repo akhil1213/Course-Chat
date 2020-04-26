@@ -13,6 +13,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import uuid from 'uuid'
+import {connect,dispatch} from 'react-redux'
 //import logoimage from '../images/logoimage.jpeg';
 
 //how to pass a link to listitem component onclick https://stackoverflow.com/questions/47206639/how-to-add-a-link-to-a-list-in-material-ui-1-0
@@ -45,7 +46,7 @@ class UserProfile extends React.Component{
         window.addEventListener('popstate', function (event){
             window.history.pushState(null, document.title,  window.location.href);
         });
-        axios.get('http://www.localhost:5000/'+this.props.location.state.username)
+        axios.get('http://www.localhost:5000/'+this.props.userData[0].username)
         .then( (response) => {
             console.log("akhil")
             console.log(response.data);
@@ -69,7 +70,7 @@ class UserProfile extends React.Component{
             courseName:this.state.class,
             profName:this.state.profName,
             time:this.state.time,
-            username:this.props.location.state.username
+            username:this.props.userData[0].username
         };
         this.state.classes.push(newClass);
         this.setState({classes:this.state.classes});
@@ -78,7 +79,7 @@ class UserProfile extends React.Component{
             courseName:this.state.class,
             profName:this.state.profName,
             time:this.state.time,
-            username:this.props.location.state.username
+            username:this.props.userData[0].username
         }).then().catch( (error) => {
             console.log(error);
         });
@@ -104,17 +105,15 @@ class UserProfile extends React.Component{
                         </div>
                         <div id = "nameandcollege">
                             <div id = "fullname">
-                                <p>{this.props.location.state.fullname}</p>
+                                <p>{this.props.userData[0].fullName}</p>
                             </div>
                             <div id = "college">
-                                <p>Student @ {this.props.location.state.college}</p>
+                                <p>Student @ {this.props.userData[0].college}</p>
                             </div>
                         </div>
                     </div>
-                    <p>The username is {this.props.location.state.username}</p>
-                    <p>The password is {this.props.location.state.password}</p>
-                    <p>The college you go to is: {this.props.location.state.college}</p>
-                    <p>Your current email set is:{this.props.location.state.email}</p>
+                    <p>The username is {this.props.userData[0].username}</p>
+                    <p>Your current email set is:{this.props.userData[0].email}</p>
                 </div>
                     <div id = "listItems">
                     <List id = "list">
@@ -193,7 +192,7 @@ class UserProfile extends React.Component{
                                                     className:classObject.courseName,
                                                     profName:classObject.profName,
                                                     time:classObject.time,
-                                                    username:this.props.location.state.username
+                                                    username:this.props.userData[0].username
                                                 },
                                               }}
                                             onClick={() => { console.log('onClick'); }}
@@ -227,7 +226,13 @@ class UserProfile extends React.Component{
         );
     }
 }
-export default UserProfile;
+
+const mapStateToProps = (store) => (
+    console.log(store),{
+      userData:store.user
+    })
+
+export default connect(mapStateToProps,null)(UserProfile)
 
 //Graphql,redis, mern stack, mongodb, 
 //graphql is for complicated queries

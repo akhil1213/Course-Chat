@@ -3,8 +3,9 @@ import {NavLink, Link} from 'react-router-dom';
 import {Box,Container, MenuItem,Select, Input, InputLabel, TextField} from '@material-ui/core'
 import {useSelector, useDispatch } from 'react-redux';
 import { signIn } from '../actions/isLogged'
-import { connect } from 'react-redux';
+import { connect, dispatch} from 'react-redux';
 import { logIn } from '../reducers/isLogged';
+import {register} from '../actions/isLogged'
 //you have to install redux and install react-redux
 //i kind of used this website https://serverless-stack.com/chapters/create-a-login-page.html
 
@@ -26,7 +27,7 @@ function Signup(props) {
       if(!validateForm())
           e.preventDefault();
       else
-          props.signIn();//signup
+          props.register(fullname,email,username,password,college);//signup
           //send user to mongodb using axios. 
       /*if validatedform is false so its not validated then you prevent the 
       default action from happening which is going to user profile page.*/
@@ -180,5 +181,13 @@ const mapStateToProps = (state) => {
       };
 }
 
+function mapDispatchToProps(dispatch){
+  return {
+    register:(fullName,email,username,password,college)=>{
+        register(dispatch,fullName,email,username,password,college)
+      }
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Signup)
 
-export default connect(mapStateToProps, {signIn})(Signup);
+// export default connect(mapStateToProps, {signIn})(Signup);

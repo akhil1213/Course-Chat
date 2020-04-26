@@ -73,6 +73,7 @@ const useStyles = makeStyles(theme => ({
           {/* {auth && ( */}
             <div>
               {props.isLogged===false && (<Link to ="/signup">Sign up</Link>)}
+              {props.isLogged===false && (<Link to ="/login">Login</Link>)}
               {props.isLogged && <Link to ="/signup" onClick={signOut}>Log Out</Link>}
               {props.isLogged && <Link to ="/profile">Profile</Link>}
               <IconButton
