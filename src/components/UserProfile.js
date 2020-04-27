@@ -42,6 +42,11 @@ class UserProfile extends React.Component{
     componentDidMount() {
         /*code disables user to go back since going back would allow the user 
         to go back to the signup page but the user already signed up.*/
+        // if(this.props.location.state.username!= null){
+        //     const {username,fullName, college, email} = this.props.location.state
+        // }else{
+        //     const {username,fullName, college, email} = this.props.userData[0]
+        // }
         window.history.pushState(null, document.title, window.location.href);
         window.addEventListener('popstate', function (event){
             window.history.pushState(null, document.title,  window.location.href);
@@ -229,7 +234,7 @@ class UserProfile extends React.Component{
 
 const mapStateToProps = (store) => (
     console.log(store),{
-      userData:store.user
+      userData:store.logged.user
     })
 
 export default connect(mapStateToProps,null)(UserProfile)

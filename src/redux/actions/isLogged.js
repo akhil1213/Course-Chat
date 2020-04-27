@@ -2,6 +2,7 @@ import { SIGN_IN } from './types';
 import { SIGN_OUT } from './types'
 import axios from 'axios';
 import {returnErrors} from './errorActions'
+import jwt_decode from "jwt-decode";
 
 export function signIn(){
     return {
@@ -15,7 +16,35 @@ export function signOut(){
             //payload:false
     }
 }
-export const register = (dispatch,fullName,email,username,password,college) =>{
+export const login = (dispatch,history,username,password) =>{
+    const config = {
+        headers:{
+            'Content-Type':'application/json'
+        }
+    }
+    const body = JSON.stringify({username,password})
+
+    axios.post('http://localhost:5000/login',body,config)
+    .then(res => {
+        console.log(res.data)
+        dispatch({
+            type:'LOGIN_SUCCESS',
+            payload:res.data
+        })
+        dispatch({
+            type:'SIGN_IN'
+        })
+        history.push('/')
+        loadUser(dispatch)
+    }).catch( (err) => {
+        dispatch(returnErrors(err.response.data,err.response.status,'LOGIN_FAIL'))//register_fail
+        dispatch({
+            type:'LOGIN_FAIL'
+        })
+        console.log(err)
+    });
+}
+export const register = (dispatch,history,fullName,email,username,password,college) =>{
     const config = {
         headers:{
             'Content-Type':'application/json'
@@ -26,6 +55,7 @@ export const register = (dispatch,fullName,email,username,password,college) =>{
     axios.post('http://localhost:5000/signup',body,config)
     .then(res => {
         console.log(res.data)
+        const {token } = res.data
         dispatch({
             type:'REGISTER_SUCCESS',
             payload:res.data
@@ -33,7 +63,11 @@ export const register = (dispatch,fullName,email,username,password,college) =>{
         dispatch({
             type:'SIGN_IN'
         })
+        // const user = jwt_decode(token)
+        // console.log(user)
+        // dispatch(setCurrentUser(user));
         loadUser(dispatch)
+        history.push('/')
     }).catch( (err) => {
         dispatch(returnErrors(err.response.data,err.response.status,'REGISTER_FAIL'))//register_fail
         dispatch({
@@ -42,6 +76,12 @@ export const register = (dispatch,fullName,email,username,password,college) =>{
         console.log(err)
     });
 }
+export const setCurrentUser = decoded => {
+    return {
+      type: 'USER_LOADED',
+      payload: decoded
+    };
+  };
 export const loginWorked = (dispatch,res) =>{
     dispatch({
         type:'LOGIN_SUCCESS',

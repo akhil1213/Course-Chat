@@ -29,8 +29,11 @@ function Signup(props) {
       if(!validateForm()){
           e.preventDefault();
       }
-      else
-          props.register(fullname,email,username,password,college);//signup
+      else{
+          e.preventDefault()
+          console.log(props.errorMsg)
+          props.register(props.history,fullname,email,username,password,college);//signup
+      }
           //send user to mongodb using axios. 
       /*if validatedform is false so its not validated then you prevent the 
       default action from happening which is going to user profile page.*/
@@ -115,6 +118,7 @@ function Signup(props) {
           <Container maxWidth="sm">
             <Box className='Box' border={1}borderColor="primary.main">
                 <form id="formforsignup">
+                  <p>{props.errorMsg}</p>
                   <div className="spaceForInput">
                     <TextField placeholder="Full Name" name="fullname"
                         error={fullNameError.length > 0}
@@ -163,14 +167,14 @@ function Signup(props) {
                   </TextField>
                   {collegeError.length > 0 && <div id ="errorlabel">{collegeError}</div>}
                   <NavLink to={{
-                        pathname: '/profile',
-                        state:{
-                            username:username,
-                            fullname:fullname,
-                            email:email,
-                            password:password,
-                            college:college
-                        },
+                        pathname: '/',
+                        // state:{
+                        //     username:username,
+                        //     fullname:fullname,
+                        //     email:email,
+                        //     password:password,
+                        //     college:college
+                        // },
                       }} onClick={handleClick} activeStyle={{ color: 'black' }} className="navLink">Submit</NavLink>
                 </form>
             </Box>
@@ -179,7 +183,7 @@ function Signup(props) {
       );
     }
 const mapStateToProps = (state) => {
-  console.log(state.error.msg.msg)
+  console.log(state)
       return {
         isLogged:state.logged.loggedIn,
         errorMsg:state.error.msg.msg,
@@ -189,8 +193,8 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch){
   return {
-    register:(fullName,email,username,password,college)=>{
-        register(dispatch,fullName,email,username,password,college)
+    register:(history,fullName,email,username,password,college)=>{
+        register(dispatch,history,fullName,email,username,password,college)
       }
   }
 }
