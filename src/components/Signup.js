@@ -2,10 +2,10 @@ import React , { useState } from 'react';
 import {NavLink, Link} from 'react-router-dom';
 import {Box,Container, MenuItem,Select, Input, InputLabel, TextField} from '@material-ui/core'
 import {useSelector, useDispatch } from 'react-redux';
-import { signIn } from '../actions/isLogged'
+import { signIn } from '../redux/actions/isLogged'
 import { connect, dispatch} from 'react-redux';
-import { logIn } from '../reducers/isLogged';
-import {register} from '../actions/isLogged'
+import { logIn } from '../redux/reducers/isLogged';
+import {register} from '../redux/actions/isLogged'
 //you have to install redux and install react-redux
 //i kind of used this website https://serverless-stack.com/chapters/create-a-login-page.html
 
@@ -24,8 +24,11 @@ function Signup(props) {
     const [isLogged,setIsLogged] = useState(false);
     const dispatch = useDispatch();
     function handleClick(e){
-      if(!validateForm())
+      // console.log(props.state.isLoading)
+      // console.log(props.state.error)
+      if(!validateForm()){
           e.preventDefault();
+      }
       else
           props.register(fullname,email,username,password,college);//signup
           //send user to mongodb using axios. 
@@ -176,8 +179,11 @@ function Signup(props) {
       );
     }
 const mapStateToProps = (state) => {
+  console.log(state.error.msg.msg)
       return {
-        isLogged:state.loggedIn
+        isLogged:state.logged.loggedIn,
+        errorMsg:state.error.msg.msg,
+        isLoading:state.logged.isLoading
       };
 }
 

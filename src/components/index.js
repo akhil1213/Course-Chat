@@ -4,7 +4,7 @@ import './index.css';
 import App from '../App';
 import * as serviceWorker from '../serviceWorker';
 import {createStore} from 'redux';
-import loggedReducer from '../reducers/isLogged'
+import loggedReducer from '../redux/reducers/isLogged'
 import { Provider } from 'react-redux';//provider connects our global states from our store to our entire app.
 //import { store } from './store'
 //now the whole app has access to the store 

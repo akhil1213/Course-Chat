@@ -14,7 +14,7 @@ import Menu from '@material-ui/core/Menu';
 import {Link} from 'react-router-dom';
 import {Signup} from './Signup';
 import {UserProfile} from './UserProfile';
-import { signOut } from '../actions/isLogged'
+import { signOut } from '../redux/actions/isLogged'
 
 import { connect } from 'react-redux';
 const useStyles = makeStyles(theme => ({
@@ -114,7 +114,7 @@ const useStyles = makeStyles(theme => ({
 }
 const mapStateToProps = (store) => (
   console.log(store),{
-    isLogged:store.loggedIn//isLogged is now a prop
+    isLogged:store.logged.loggedIn//isLogged is now a prop
 })
 export default connect(mapStateToProps,{signOut})(MenuAppBar)//we get signout action from here 
 

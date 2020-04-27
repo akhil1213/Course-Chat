@@ -2,14 +2,14 @@ import React , { useState } from 'react';
 import {NavLink, Link} from 'react-router-dom';
 import {Box,Container, MenuItem,Select, Input, InputLabel, TextField} from '@material-ui/core'
 import {useSelector, useDispatch } from 'react-redux';
-import { signIn } from '../actions/isLogged'
+// import { signIn } from '../actions/isLogged'
 import { connect, dispatch} from 'react-redux';
-import { logIn } from '../reducers/isLogged';
-import {register} from '../actions/isLogged'
-import {login} from '../actions/isLogged'
+// import { logIn } from '../reducers/isLogged';
+// import {register} from '../actions/isLogged'
+import {loginWorked, loginFailed} from '../redux/actions/isLogged'
 //you have to install redux and install react-redux
 //i kind of used this website https://serverless-stack.com/chapters/create-a-login-page.html
-
+import axios from 'axios'
 function Login(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -19,11 +19,29 @@ function Login(props) {
     const [passwordError, setPasswordError] = useState('');
     const dispatch = useDispatch();
     function handleClick(e){
-      if(!validateForm())
+      console.log(props)
+      if(!validateForm()){
+        console.log("not valid ")
           e.preventDefault();
-      else
-          props.login(username,password);//signup
-          //send user to mongodb using axios. 
+      }
+      else{
+          e.preventDefault()
+          const config = {
+            headers:{
+                'Content-Type':'application/json'
+            }
+          }
+          const body = JSON.stringify({username,password})
+          axios.post('http://localhost:5000/login',body,config)
+              .then(res => {
+                  console.log(res)
+                  props.history.push('/profile')
+                  props.loginWorked(res)
+              }).catch( (err) => {
+                console.log("how")
+                  props.loginFailed(err)
+              });
+      }
       /*if validatedform is false so its not validated then you prevent the 
       default action from happening which is going to user profile page.*/
     }
@@ -43,7 +61,7 @@ function Login(props) {
             setUsernameError("");
             setPasswordError("password needs at least one digit and one uppercase")
         }
-        return (password.length > 8  && validPW);
+        return (password.length >= 8  && validPW);
   }
   function updateUsername(event) {
     setUsername(event.target.value);
@@ -69,6 +87,7 @@ function Login(props) {
           <Container maxWidth="sm">
             <Box className='Box' border={1}borderColor="primary.main">
                 <form id="formforsignup">
+                  <p>{props.errorMsg}</p>
                   <div className="spaceForInput">
                     <Input
                       placeholder="Username"
@@ -103,17 +122,23 @@ function Login(props) {
         </div>
       );
     }
-const mapStateToProps = (state) => {
-      return {
-        isLogged:state.loggedIn
-      };
-}
+const mapStateToProps = (state) => (
+  console.log(state),
+      {
+        isLoading:state.logged.isLoading,
+        isLogged:state.logged.loggedIn,
+        errorMsg:state.error.msg.message
+      }
+)
 
 function mapDispatchToProps(dispatch){
   return {
-    login:(username,password)=>{
-        login(dispatch,username,password)
-      }
+    loginWorked:(res)=>{
+        loginWorked(dispatch,res)
+      },
+    loginFailed:(err)=>{
+      loginFailed(dispatch,err)
+    }
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login)

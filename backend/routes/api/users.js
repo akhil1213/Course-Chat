@@ -80,12 +80,11 @@ router.post(
     "/login",
     async (req, res) => {
         const {
-            fullName,
             username,
-            email,
             password,
-            college,
         } = req.body;
+        console.log(username)
+        console.log(password)
         let user_;
         User.findOne({username})
             .then(user => {

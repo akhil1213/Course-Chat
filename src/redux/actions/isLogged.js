@@ -42,37 +42,26 @@ export const register = (dispatch,fullName,email,username,password,college) =>{
         console.log(err)
     });
 }
-export const login = (dispatch,username,password) =>{
-    const config = {
-        headers:{
-            'Content-Type':'application/json'
-        }
-    }
-    const body = JSON.stringify({username,password})
-
-    axios.post('http://localhost:5000/login',body,config)
-    .then(res => {
-        console.log(res.data)
-        dispatch({
-            type:'LOGIN_SUCCESS',
-            payload:res.data
-        })
-        dispatch({
-            type:'SIGN_IN'
-        })
-        loadUser(dispatch)
-    }).catch( (err) => {
-        dispatch(returnErrors(err.response.data,err.response.status,'LOGIN_FAIL'))//register_fail
-        dispatch({
-            type:'LOGIN_FAIL'
-        })
-        console.log(err)
-    });
+export const loginWorked = (dispatch,res) =>{
+    dispatch({
+        type:'LOGIN_SUCCESS',
+        payload:res.data
+    })
+    dispatch({
+        type:'SIGN_IN'
+    })
+    loadUser(dispatch)
 }
-
+export const loginFailed = (dispatch,err) => {
+    dispatch(returnErrors(err.response.data,err.response.status,'LOGIN_FAIL'))//register_fail
+    dispatch({
+        type:'LOGIN_FAIL'
+    })
+    console.log(err.response.data)
+}
 export const loadUser = (dispatch) => {
     // User loading
-    dispatch({type: "USER_LOADING"})
+    // dispatch({type: "USER_LOADING"})
     //get token from local storage
     const config = setConfig()
     axios.get("http://localhost:5000/get/user",config)
