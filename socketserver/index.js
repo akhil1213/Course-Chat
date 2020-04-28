@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
-
+var connectedClients = {};
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
 const router = require('./routes');
@@ -29,8 +29,14 @@ io.on('connection', (socket) => {
 
   //   callback();
   // });
+  socket.on('user_connected',function(username){
+    connectedClients[username] = socket.id;
+    console.log(socket.id)
+  })
   socket.on('sendPrivateMessage', function (message, from,to) {
-    io.emit('private_message',{message, from,to});//check if from is same user so user doesnt receive their own message
+    var id = connectedClients[to]
+    console.log(id)
+    io.to(id).emit('private_message',{message, from,to});//check if from is same user so user doesnt receive their own message
   });
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);

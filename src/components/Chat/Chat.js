@@ -39,13 +39,14 @@ const Chat = ({ location }) => {
     //   setMessages(messages => [ ...messages, message ]);
     // });
     const { name, to } = queryString.parse(location.search);
+    socket.emit('user_connected',name)
     socket.on('private_message', message => {
       console.log(message)
       console.log(name)
-      if( message.to == name){//name is current user. we won't want current user to send message to themselves.
+      // if( message.to == name){//name is current user. we won't want current user to send message to themselves.
         setMessages(messages => [ ...messages, message ]);
         console.log('yes')
-      }
+      // }
     });
     
     // socket.on("roomData", ({ users }) => {
