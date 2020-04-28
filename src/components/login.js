@@ -39,14 +39,14 @@ function validateForm(){
       else if(password.length === 0){
           setUsernameError("");
           setPasswordError("password is empty");
-      }else if(password.length < 8 ){
+      }else if(password.length < 7 ){
           setUsernameError("");
           setPasswordError("password needs to be more then eight characters")
       }else if(!validPW){
           setUsernameError("");
           setPasswordError("password needs at least one digit and one uppercase")
       }
-      return (password.length >= 8  && validPW);
+      return (password.length >= 7  && validPW);
 }
 function updateUsername(event) {
   setUsername(event.target.value);

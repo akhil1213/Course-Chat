@@ -49,7 +49,7 @@ export default class ClassComponent extends React.Component {
                             /> 
                             {/* should be chatting and view profile icons instead. */}
                             <ListItemSecondaryAction>
-                            <Link to = {'/chat?name='+this.props.location.state.username+'&room=room'}>
+                            <Link to = {'/chat?name='+this.props.location.state.username+'&to='+student.username}>
                                 <IconButton>
                                     <ChatIcon />
                                 </IconButton>

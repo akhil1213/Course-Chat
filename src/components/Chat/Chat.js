@@ -11,6 +11,8 @@ let socket;
 
 const Chat = ({ location }) => {
   const [name, setName] = useState('');
+  const [to, setTo] = useState('');
+
   const [room, setRoom] = useState('');
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
@@ -18,35 +20,44 @@ const Chat = ({ location }) => {
   const ENDPOINT = 'http://localhost:4000/';
 
   useEffect(() => {
-    const { name, room } = queryString.parse(location.search);
+    const { name, to } = queryString.parse(location.search);
 
     socket = io(ENDPOINT);
 
-    setRoom(room);
+    setTo(to);
     setName(name)
-
-    socket.emit('join', { name, room }, (error) => {
-      if(error) {
-        alert(error);
-      }
-    });
+    console.log(name)
+    // socket.emit('join', { name, room }, (error) => {
+    //   if(error) {
+    //     alert(error);
+    //   }
+    // });
   }, [ENDPOINT, location.search]);
   
-  useEffect(() => {
-    socket.on('message', message => {
-      setMessages(messages => [ ...messages, message ]);
+  useEffect(() => {//same as componentdidmount, unmout, willmount
+    // socket.on('message', message => {
+    //   setMessages(messages => [ ...messages, message ]);
+    // });
+    const { name, to } = queryString.parse(location.search);
+    socket.on('private_message', message => {
+      console.log(message)
+      console.log(name)
+      if( message.to == name){//name is current user. we won't want current user to send message to themselves.
+        setMessages(messages => [ ...messages, message ]);
+        console.log('yes')
+      }
     });
     
-    socket.on("roomData", ({ users }) => {
-      setUsers(users);
-    });
+    // socket.on("roomData", ({ users }) => {
+    //   setUsers(users);
+    // });
 }, []);
 
   const sendMessage = (event) => {
     event.preventDefault();
-
+    console.log(name)
     if(message) {
-      socket.emit('sendMessage', message, () => setMessage(''));
+      socket.emit('sendPrivateMessage', message,name,to, () => setMessage(''));
       console.log(message)
     }
   }
@@ -54,7 +65,7 @@ const Chat = ({ location }) => {
   return (
     <div className="outerContainer">
       <div className="container">
-          <InfoBar room={room} />
+          <InfoBar room={name} />
           <Messages messages={messages} name={name} />
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
       </div>

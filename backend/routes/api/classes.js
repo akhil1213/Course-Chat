@@ -14,12 +14,12 @@ router.get("/", (req,res) => {
     Class.find()
         .then(items => res.json(items));
 });
-router.get("/:username", auth, (req,res) => {
+router.get("/:username",  (req,res) => {
     console.log(req.params.username)
     Class.find({ username:req.params.username})
         .then(items => res.json(items));
 });
-router.get("/course/:id",auth, (req,res) => {
+router.get("/course/:id", (req,res) => {
     // console.log(req.params.username)
     Class.find({ _id:req.params.id})
         .then(classInfo => {
@@ -48,7 +48,7 @@ router.get("/course/:id",auth, (req,res) => {
 //     type:String,
 //     required: true,
 // },
-router.post("/", auth, (req,res) => {
+router.post("/",  (req,res) => {
     console.log("post worked!s")
     const newClass = new Class({
         courseName: req.body.courseName,
@@ -64,7 +64,7 @@ router.post("/", auth, (req,res) => {
 // @access public
 //what if somebody drops a class
 //we probably arent even going to ues cuny first so whatever
-router.delete("/:id",auth,(req,res) => {
+router.delete("/:id",(req,res) => {
     Class.findByIdAndRemove({ _id:req.params.id }, (err,data) => {
         console.log(err);
     })
@@ -74,7 +74,7 @@ router.delete("/:id",auth,(req,res) => {
 //@desc update a post
 // @access public
 //maybe they swapped professors!
-router.put("/:id",auth, (req,res) => {
+router.put("/:id",(req,res) => {
     const newClass = new Class({
         courseName: req.body.courseName,
         profName:req.body.profName,
