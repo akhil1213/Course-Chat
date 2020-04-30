@@ -35,8 +35,9 @@ io.on('connection', (socket) => {
   })
   socket.on('sendPrivateMessage', function (message, from,to) {
     var id = connectedClients[to]
-    console.log(id)
-    io.to(id).emit('private_message',{message, from,to});//check if from is same user so user doesnt receive their own message
+    console.log(from)
+    console.log(to)
+    io.to(id).emit('private_message',{text: message, user: from});//check if from is same user so user doesnt receive their own message
   });
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
