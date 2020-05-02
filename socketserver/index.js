@@ -30,14 +30,37 @@ io.on('connection', (socket) => {
   //   callback();
   // });
   socket.on('user_connected',function(username){
-    connectedClients[username] = socket.id;
-    console.log(socket.id)
+    // var connectedClients = {}
+    connectedClients[username] = {//map with username as key and value is json object.
+      chatters:[],//who's chatting with the client
+      messages:[],//the messages sent from client and messages users are sending to the client.
+      socketId:socket.id
+    }
+    connectedClients[username].socketId = socket.id
+    console.log(connectedClients)
   })
+  console.log(connectedClients)
   socket.on('sendPrivateMessage', function (message, from,to) {
-    var id = connectedClients[to]
+    console.log(connectedClients)
+    var id = connectedClients[to].socketId
+    //two if statements making sure everytime a message is sent, no need to add the same chatter to the chatters array.
+    //thus fixed a bug where on each message sent, whoever is sending the message, that person keeps getting added to chatters.
+    // no duplicate chatters.
+    if(connectedClients[to].chatters.findIndex(chatter => chatter == from)== -1) {
+      connectedClients[to].chatters.push(from)
+    }
+    if(connectedClients[from].chatters.findIndex(chatter => chatter == to)==-1){
+      connectedClients[from].chatters.push(to)
+    }
+    connectedClients[from].messages.push({text:message,from:null,to})
+    connectedClients[to].messages.push({text:message,from,to:null})
     console.log(from)
     console.log(to)
-    io.to(id).emit('private_message',{text: message, user: from});//check if from is same user so user doesnt receive their own message
+    console.log(connectedClients)
+    //if connectedClients[to] is null, then the person the current client is trying to send a message to is offline.
+    if(connectedClients[to]!= null)io.to(id).emit('private_message',connectedClients[to]);//check if from is same user so user doesnt receive their own message
+    //from is obviously online to send a message so no need to check if online
+    io.to(connectedClients[from].socketId).emit('private_message',connectedClients[from]);
   });
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);

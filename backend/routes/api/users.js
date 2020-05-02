@@ -102,6 +102,7 @@ router.post(
                     message: "Wrong password"
                     });
                 } else {
+                    console.log("your auth!")
                     const payload = {
                         id: user_.id
                     };

@@ -18,6 +18,11 @@ const Chat = ({ location }) => {
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [connectedClients,setConnectedClients] = useState({
+    chatters:[],
+    messages:[],
+    socketId:''
+  });
   const ENDPOINT = 'http://localhost:4000/';
 
   useEffect(() => {
@@ -42,12 +47,21 @@ const Chat = ({ location }) => {
     // });
     const { name, to } = queryString.parse(location.search);
     socket.emit('user_connected',name)
-    socket.on('private_message', (message) => {
+    setCurrentChatter(to)
+    setName(name)
+    socket.on('private_message', (connectedClients) => {
       // if( message.to == name){//name is current user. we won't want current user to send message to themselves.
-      console.log(message)  
-      setMessages(messages => [ ...messages, message ]);
-        setUsers(users => [...users,message.user])
-        console.log(users)
+      // setCurrentChatter(message.user)
+      console.log(name)
+      console.log(to)
+      console.log("YOOOOO")
+      setCurrentChatter(to)
+      setName(name)
+        setConnectedClients(connectedClients)
+        console.log(connectedClients)  
+      // setMessages(messages => [ ...messages, message ]);
+      //   setUsers(users => [...users,message.user])
+        // console.log(users)
       // }
     });
     
@@ -61,25 +75,26 @@ const Chat = ({ location }) => {
     console.log(name)
     if(message) {
       socket.emit('sendPrivateMessage', message,name,to, () => setMessage(''));
-      console.log(message)
+      setMessages(messages=>[...messages,{text:message,from:name,to:null}])
+      console.log(messages)
     }
   }
   return (
     <div className="outerContainer">
-      {users.map((classmate) => {
+      {connectedClients.chatters.map((classmate) => {
         return (
           <ListItem
             button
             onClick={() => { setCurrentChatter(classmate) }}
           >
-            <ListItemText primary = {classmate}/>
-            <p>fgbfgbfbg</p>
+            <p>{classmate}</p>
+
           </ListItem>
         )
       })}
       <div className="container">
           <InfoBar room={currentChatter} />
-          <Messages messages={messages} from={currentChatter} name={name} />
+          <Messages messages={connectedClients.messages} currentChatter={currentChatter} currentUser={name} />
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
       </div>
       <TextContainer users={users}/>

@@ -4,40 +4,55 @@ import './Message.css';
 
 import ReactEmoji from 'react-emoji';
 import {When, Choose} from 'jsx-control-statements'
-const Message = ({ message: { text, user }, name, from }) => {
+const Message = ({ message, name, from }) => {
+  console.log(message)
+  var text = message.text
+  //these messages can be either from someone sending it to us but if not 
+  //then when we're sending the message so user is the person we're sending the message to.
+  var user = null;
+  if(message.from != null ) {
+    user = message.from
+  }else{
+    user = message.to
+  }
   console.log(text)
   console.log(user)//user is dependent on the message.
   console.log(from)//from is current chatter, the person we care about.
-  let isSentByCurrentUser = false;
+  let isSentByCurrentUser = true;
   let isSentByWantedSender = false
-  const trimmedName = name.trim().toLowerCase();
+  let senderName = name.trim().toLowerCase();
 
-  if(user === trimmedName) {
-    isSentByCurrentUser = true;
+  // if(user === senderName) {
+  //   isSentByCurrentUser = true;
+  // }
+  // if(user === from){
+  //   isSentByWantedSender=true
+  // }
+  if(message.from!=null){//current person is receiving the message.
+    isSentByCurrentUser = false;
+    senderName = message.from.trim().toLowerCase();
+    text += 'sentby:' + message.from
   }
-  if(user === from){
-    isSentByWantedSender=true
+  else{//current person is sending the message.
+    text += 'sentTo:' + message.to 
   }
-
   return (
-    <Choose>
-          <When condition={isSentByCurrentUser}>
-          <div className="messageContainer justifyEnd">
-            <p className="sentText pr-10">{trimmedName}</p>
-            <div className="messageBox backgroundBlue">
-              <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
-            </div>
+    isSentByCurrentUser ? (
+      <div className="messageContainer justifyEnd">
+        <p className="sentText pr-10">{senderName}</p>
+        <div className="messageBox backgroundBlue">
+          <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
+        </div>
+      </div>
+    ):
+      (
+        <div className="messageContainer justifyStart">
+          <div className="messageBox backgroundLight">
+            <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
           </div>
-          </When>
-          <When condition={isSentByWantedSender}>
-              <div className="messageContainer justifyStart">
-                <div className="messageBox backgroundLight">
-                  <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
-                </div>
-                <p className="sentText pl-10 ">{user}</p>
-              </div>
-          </When>
-    </Choose>
+          <p className="sentText pl-10 ">{senderName}</p>
+        </div>
+      )
   )
 }
 
