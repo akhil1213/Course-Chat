@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 import io from "socket.io-client";
-import TextContainer from '../TextContainer/TextContainer';
 import Messages from '../Messages/Messages';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
@@ -10,96 +9,81 @@ import {List, ListItem, ListItemText} from '@material-ui/core'
 
 let socket;
 
-const Chat = ({ location }) => {
-  const [name, setName] = useState('');
-  const [to, setTo] = useState('');
-  const [currentChatter, setCurrentChatter] = useState('');
-  const [room, setRoom] = useState('');
-  const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [connectedClients,setConnectedClients] = useState({
-    chatters:[],
-    messages:[],
-    socketId:''
-  });
-  const ENDPOINT = 'http://localhost:4000/';
-
-  useEffect(() => {
-    const { name, to } = queryString.parse(location.search);
-
-    socket = io(ENDPOINT);
-    setCurrentChatter(to)
-    setTo(to);
-    setName(name)
-    setUsers([...users,to])
-    console.log(name)
-    // socket.emit('join', { name, room }, (error) => {
-    //   if(error) {
-    //     alert(error);
-    //   }
-    // });
-  }, [ENDPOINT, location.search]);
-  
-  useEffect(() => {//same as componentdidmount, unmout, willmount
-    // socket.on('message', message => {
-    //   setMessages(messages => [ ...messages, message ]);
-    // });
-    const { name, to } = queryString.parse(location.search);
-    socket.emit('user_connected',name)
-    setCurrentChatter(to)
-    setName(name)
-    socket.on('private_message', (connectedClients) => {
-      // if( message.to == name){//name is current user. we won't want current user to send message to themselves.
-      // setCurrentChatter(message.user)
-      console.log(name)
-      console.log(to)
-      console.log("YOOOOO")
-      setCurrentChatter(to)
-      setName(name)
-        setConnectedClients(connectedClients)
-        console.log(connectedClients)  
-      // setMessages(messages => [ ...messages, message ]);
-      //   setUsers(users => [...users,message.user])
-        // console.log(users)
-      // }
+class Chat extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={
+        username:this.props.location.state.username,
+        currentChatter:this.props.location.state.sendMessageTo,
+        connectedClients:{
+          chatters:[],
+          messages:[],
+          socketId:''
+        },
+        socket:io('http://localhost:4000/'),
+        message:''
+    };
+  }
+  componentWillMount(){
+    this.state.socket.emit('user_connected',this.state.username)
+    this.state.socket.on('private_message', (connectedClients) => {
+        var messagesToShow = []
+        var messageIndex = 0;
+        for(var i = 0; i < connectedClients.messages.length; i++){
+          if(connectedClients.messages[i].from == this.state.currentChatter || connectedClients.messages[i].to === this.state.currentChatter){
+            messagesToShow[messageIndex++] = connectedClients.messages[i]
+          }
+        }
+        console.log(messagesToShow)
+        connectedClients.messages = messagesToShow
+        // connectedClients.messages.filter(message =>
+        //   message.from == this.state.currentChatter || message.to === this.state.currentChatter
+        // )
+        console.log(connectedClients)
+        this.setState({connectedClients:connectedClients})
+        console.log(connectedClients)
     });
     
-    // socket.on("roomData", ({ users }) => {
-    //   setUsers(users);
-    // });
-}, []);
+  }
 
-  const sendMessage = (event) => {
+  sendMessage = (event) => {
     event.preventDefault();
-    console.log(name)
-    if(message) {
-      socket.emit('sendPrivateMessage', message,name,to, () => setMessage(''));
-      setMessages(messages=>[...messages,{text:message,from:name,to:null}])
-      console.log(messages)
+    if(this.state.message != '') {
+      this.state.socket.emit('sendPrivateMessage', this.state.message,this.state.username,this.state.currentChatter, () => this.setMessage(''));
     }
   }
-  return (
-    <div className="outerContainer">
-      {connectedClients.chatters.map((classmate) => {
-        return (
-          <ListItem
-            button
-            onClick={() => { setCurrentChatter(classmate) }}
-          >
-            <p>{classmate}</p>
-
-          </ListItem>
-        )
-      })}
-      <div className="container">
-          <InfoBar room={currentChatter} />
-          <Messages messages={connectedClients.messages} currentChatter={currentChatter} currentUser={name} />
-          <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-      </div>
-      <TextContainer users={users}/>
-    </div>
-  );
+  setMessage = (message) =>{
+    this.setState({message:message})
+  }
+  changeChatter = (classmate) =>{
+    this.setState({currentChatter:classmate})
+    this.state.socket.emit('changedChatter',this.state.username)
+  }
+  render(){
+      return (
+        <div className="outerContainer">
+          <div className="chattersList">
+            {this.state.connectedClients.chatters.map((classmate) => {
+              return (
+                <ListItem
+                  id = "chatter"
+                  button
+                  onClick={() => this.changeChatter(classmate)}
+                >
+                  <p>{classmate}</p>
+                </ListItem>
+              )
+            })}
+          </div>
+          <div className="container">
+              <InfoBar room={this.state.currentChatter} />
+              <Messages messages={this.state.connectedClients.messages} currentChatter={this.state.currentChatter} currentUser={this.state.username} />
+              <Input message={this.state.message} setMessage={this.setMessage} sendMessage={this.sendMessage} />
+          </div>
+        </div>
+      );
+  }
 }
+
 
 export default Chat;

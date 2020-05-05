@@ -1,11 +1,19 @@
 .outerContainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center;
+  align-items: center; */
+  flex-direction:row;
   height: 100vh;
   background-color: #1A1A1D;
 }
-
+.chattersList{
+  display:flex;
+  flex-direction:column;
+  background-color:gray;
+}
+#chatter{
+  border-bottom:2px solid red;
+}
 .container {
   display: flex;
   flex-direction: column;

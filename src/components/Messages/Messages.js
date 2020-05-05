@@ -6,10 +6,17 @@ import Message from './Message/Message';
 
 import './Messages.css';
 
-const Messages = ({ messages,currentChatter, currentUser }) => (
-  <ScrollToBottom className="messages">
-    {messages.map((message, i) => <div key={i}><Message message={message} from={currentChatter} name={currentUser}/></div>)}
-  </ScrollToBottom>
-);
+class Messages extends React.Component{
+    constructor(props){
+      super(props)
+    }
+    render(){
+      return(
+        <ScrollToBottom className="messages">
+          {this.props.messages.map((message, i) => <div key={i}><Message message={message} currentChatter={this.props.currentChatter} username={this.props.currentUser}/></div>)}
+        </ScrollToBottom>
+      );      
+    }
+}
 
 export default Messages;

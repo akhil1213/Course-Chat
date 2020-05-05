@@ -3,24 +3,25 @@ import React from 'react';
 import './Message.css';
 
 import ReactEmoji from 'react-emoji';
-import {When, Choose} from 'jsx-control-statements'
-const Message = ({ message, name, from }) => {
-  console.log(message)
+
+const Message = ({ message, currentChatter, username }) => {
+  // console.log(message)
   var text = message.text
-  //these messages can be either from someone sending it to us but if not 
-  //then when we're sending the message so user is the person we're sending the message to.
-  var user = null;
-  if(message.from != null ) {
-    user = message.from
-  }else{
-    user = message.to
-  }
-  console.log(text)
-  console.log(user)//user is dependent on the message.
-  console.log(from)//from is current chatter, the person we care about.
+  // //these messages can be either from someone sending it to us but if not 
+  // //then when we're sending the message so user is the person we're sending the message to.
+  // var user = null;
+  // if(message.from != null ) {
+  //   user = message.from
+  // }else{
+  //   user = message.to
+  // }
+  // console.log(text)
+  // console.log(user)//user is dependent on the message.
+  // console.log(from)//from is current chatter, the person we care about.
   let isSentByCurrentUser = true;
-  let isSentByWantedSender = false
-  let senderName = name.trim().toLowerCase();
+  let senderName;
+  // let isSentByWantedSender = false
+  // let senderName = name.trim().toLowerCase();
 
   // if(user === senderName) {
   //   isSentByCurrentUser = true;

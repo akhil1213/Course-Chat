@@ -40,7 +40,12 @@ io.on('connection', (socket) => {
     console.log(connectedClients)
   })
   console.log(connectedClients)
+  socket.on('changedChatter',(currentUser) =>{
+    io.to(connectedClients[currentUser].socketId).emit('private_message',connectedClients[currentUser])
+  })
   socket.on('sendPrivateMessage', function (message, from,to) {
+    console.log(from)
+    console.log(to)
     console.log(connectedClients)
     var id = connectedClients[to].socketId
     //two if statements making sure everytime a message is sent, no need to add the same chatter to the chatters array.
