@@ -121,7 +121,7 @@ function mapDispatchToProps(dispatch){
   return {
     login:(history,username,password)=>{
         login(dispatch,history,username,password)
-      }
+    }
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login)

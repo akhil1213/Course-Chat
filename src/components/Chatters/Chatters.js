@@ -6,12 +6,13 @@ import './Chatters.css';
 class Chatters extends React.Component {
     state = {  }
     render() {
+        const {chatters,currentChatter} = this.props
         return (
             <div className="chattersList">
-                {this.props.connectedClients.chatters.map((classmate) => {
+                {chatters.map((classmate) => {
                 return (
                     <ListItem
-                        id = {(this.props.currentChatter == classmate ? "currentChatter" : "chatter")}
+                        id = {(currentChatter == classmate ? "currentChatter" : "chatter")}
                         button
                         onClick={() => this.props.changeChatter(classmate)}
                     >
