@@ -32,15 +32,10 @@ const Message = ({ message, currentChatter, username }) => {
   if(message.from!=null){//current person is receiving the message.
     isSentByCurrentUser = false;
     senderName = message.from.trim().toLowerCase();
-    text += 'sentby:' + message.from
-  }
-  else{//current person is sending the message.
-    text += 'sentTo:' + message.to 
   }
   return (
     isSentByCurrentUser ? (
       <div className="messageContainer justifyEnd">
-        <p className="sentText pr-10">{senderName}</p>
         <div className="messageBox backgroundBlue">
           <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
         </div>
@@ -51,7 +46,6 @@ const Message = ({ message, currentChatter, username }) => {
           <div className="messageBox backgroundLight">
             <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
           </div>
-          <p className="sentText pl-10 ">{senderName}</p>
         </div>
       )
   )

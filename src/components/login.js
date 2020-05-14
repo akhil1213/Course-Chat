@@ -88,6 +88,7 @@ function validatePassword(){
                     name="password"
                     type="password"
                     onChange={updatePassword}
+                    onKeyPress={event => event.key === 'Enter' ? handleClick(event) : null}
                   />
                   {passwordError.length > 0 && <div id ="errorlabel">{passwordError}</div>}
                 </div>

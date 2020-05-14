@@ -29,13 +29,14 @@ io.on('connection', (socket) => {
 
   //   callback();
   // });
-  socket.on('user_connected',function(username){
+  socket.on('user_connected',function(username,usersInfoBecauseOfSocketChange){
     // var connectedClients = {}
-    connectedClients[username] = {//map with username as key and value is json object.
-      chatters:[],//who's chatting with the client
-      messages:[],//the messages sent from client and messages users are sending to the client.
-      socketId:socket.id
-    }
+    connectedClients[username] = usersInfoBecauseOfSocketChange
+    // {//map with username as key and value is json object.
+    //   chatters:[],//who's chatting with the client
+    //   messages:[],//the messages sent from client and messages users are sending to the client.
+    //   socketId:socket.id
+    // }
     connectedClients[username].socketId = socket.id
     console.log(connectedClients)
   })
@@ -61,7 +62,7 @@ io.on('connection', (socket) => {
     connectedClients[to].messages.push({text:message,from,to:null})
     console.log(from)
     console.log(to)
-    console.log(connectedClients)
+    console.log(connectedClients[to])
     //if connectedClients[to] is null, then the person the current client is trying to send a message to is offline.
     if(connectedClients[to]!= null)io.to(id).emit('private_message',connectedClients[to]);//check if from is same user so user doesnt receive their own message
     //from is obviously online to send a message so no need to check if online

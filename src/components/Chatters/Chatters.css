@@ -1,0 +1,13 @@
+.chattersList{
+    display:flex;
+    flex-direction:column;
+    background-color:white;
+    height:60%;
+  }
+#chatter{
+    border-bottom:2px solid red;
+}
+#currentChatter{
+    background-color: gray;
+    border-bottom:2px solid red;
+}
