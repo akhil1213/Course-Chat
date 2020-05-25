@@ -29,9 +29,12 @@ io.on('connection', (socket) => {
 
   //   callback();
   // });
+  console.log(socket)
   socket.on('user_connected',function(username,usersInfoBecauseOfSocketChange){
     // var connectedClients = {}
-    connectedClients[username] = usersInfoBecauseOfSocketChange
+    if(connectedClients[username]== null) connectedClients[username] = usersInfoBecauseOfSocketChange
+    console.log(username)
+    console.log(usersInfoBecauseOfSocketChange)
     // {//map with username as key and value is json object.
     //   chatters:[],//who's chatting with the client
     //   messages:[],//the messages sent from client and messages users are sending to the client.

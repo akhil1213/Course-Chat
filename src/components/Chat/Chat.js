@@ -25,7 +25,11 @@ class Chat extends React.Component{
   componentWillMount(){
     console.log('yo')
     console.log(this.props.connectedClients)
-    this.setState({allMessagesAndChats:this.props.connectedClients})
+    if(this.props.connectedClients.socketID != ""){
+      this.setState({allMessagesAndChats:this.props.connectedClients})
+      this.setState({chatters:this.props.connectedClients.chatters})
+      this.filterMessages(this.props.connectedClients,this.state.currentChatter)
+    }
     // this.filterMessages(this.props.connectedClients)
     /*get messages from redux state because if you don't, messages aren't saved. it's either
     this or you keep asking for the messages from socket.io which is too many api calls.*/
@@ -40,7 +44,7 @@ class Chat extends React.Component{
     });
   }
   componentWillUnmount(){
-    this.props.updateConnectedClients(this.state.connectedClients)
+    // this.props.updateConnectedClients(this.state.connectedClients)
   }
   filterMessages = (allMessagesAndChats,currentChatter) => {
     var messagesToShow = []
@@ -86,7 +90,7 @@ class Chat extends React.Component{
 const mapStateToProps = (state) => (
   console.log(state),
       {
-        connectedClients:state.chatters.connectedClients,
+        connectedClients:state.chatters,
       }
 )
 
