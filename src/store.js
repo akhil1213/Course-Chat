@@ -3,11 +3,13 @@ import thunk from 'redux-thunk';
 import loggedReducer from './redux/reducers/isLogged'
 import errorReducer from './redux/reducers/errorReducer'
 import chattersReducer from './redux/reducers/chatters'
+import classesReducer from './redux/reducers/classes'
 const middleware = [thunk];
 const rootReducer = combineReducers({
     logged:loggedReducer,
     error:errorReducer,
-    chatters:chattersReducer
+    chatters:chattersReducer,
+    classes:classesReducer
 })
 // const store = createStore(rootReducer, initialState, 
 //         compose(

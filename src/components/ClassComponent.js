@@ -7,12 +7,14 @@ import ChatIcon from '@material-ui/icons/Chat';
 import PersonIcon from '@material-ui/icons/Person';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import axios from 'axios';
+import {  connect} from "react-redux";
+
 /*
 className:classObject.class,
 professorName:classObject.professorName,
 time:classObject.time
 */
-export default class ClassComponent extends React.Component {
+class ClassComponent extends React.Component {
   constructor(props){
     super(props);
   }
@@ -20,29 +22,22 @@ export default class ClassComponent extends React.Component {
     students:[]
   }
   componentDidMount() {
-    console.log(this.props.location.state.username)
-    axios.get('http://www.localhost:5000/course/'+this.props.location.state.classId)
-    .then( (studentsResponse) => {
-        console.log(studentsResponse.data);
-        this.setState({students:studentsResponse.data});
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-}
+    console.log(this.props.classInfo)
+    console.log(this.props.classInfo.username)
+  }
   render(){
     return (
       <div className="App">
-        {this.props.location.state.className}
-        <p>{this.props.location.state.professorName}</p>
-        <p>{this.props.location.state.time}</p>
+        {this.props.classInfo.courseName}
+        <p>{this.props.classInfo.profName}</p>
+        <p>{this.props.classInfo.time}</p>
         <p>class component</p>
         <p>Students taking this class!</p>
             <List>
-            {this.state.students.map((student,i) => {
+            {this.props.queriedClasses.map((student,i) => {
               return (
                 <div>
-                {student.username != this.props.location.state.username && (
+                {student.username != this.props.classInfo.username && (
                         <ListItem>
                             <ListItemText
                                 primary={student.username}
@@ -53,7 +48,7 @@ export default class ClassComponent extends React.Component {
                               to={{
                                 pathname: '/chat',
                                 state:{
-                                    username:this.props.location.state.username,
+                                    username:this.props.classInfo.username,
                                     sendMessageTo:student.username
                                 },
                               }}>
@@ -76,4 +71,18 @@ export default class ClassComponent extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  console.log(state)
+      return {
+          queriedClasses:state.classes.queriedClasses,
+          classInfo:state.classes.classInfo
+      };
+}
 
+function mapDispatchToProps(dispatch){
+  return {
+
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(ClassComponent)

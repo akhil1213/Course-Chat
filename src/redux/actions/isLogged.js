@@ -3,7 +3,7 @@ import { SIGN_OUT } from './types'
 import axios from 'axios';
 import {returnErrors} from './errorActions'
 import jwt_decode from "jwt-decode";
-
+import {getClassesForUser} from './classActions'
 export function signIn(){
     return {
             type: SIGN_IN,
@@ -31,6 +31,7 @@ export const login = (dispatch,history,username,password) =>{
             type:'LOGIN_SUCCESS',
             payload:res.data
         })
+        getClassesForUser(dispatch,username)
         dispatch({
             type:'SIGN_IN'
         })

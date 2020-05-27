@@ -14,6 +14,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import uuid from 'uuid'
 import {connect,dispatch} from 'react-redux'
+import {addClass, getStudentsForClass} from '../redux/actions/classActions'
+
 //import logoimage from '../images/logoimage.jpeg';
 
 //how to pass a link to listitem component onclick https://stackoverflow.com/questions/47206639/how-to-add-a-link-to-a-list-in-material-ui-1-0
@@ -27,7 +29,7 @@ class UserProfile extends React.Component{
             profName:'',
             class:'',
             time:'',
-            classes:[]
+            classes:this.props.classes
         };
     }
     openModal = () => {
@@ -47,10 +49,12 @@ class UserProfile extends React.Component{
         // }else{
         //     const {username,fullName, college, email} = this.props.userData[0]
         // }
-        window.history.pushState(null, document.title, window.location.href);
+        // window.history.pushState(null, document.title, window.location.href);
         window.addEventListener('popstate', function (event){
-            window.history.pushState(null, document.title,  window.location.href);
+            // window.history.pushState(null, document.title,  window.location.href);
         });
+        //instead of having user constantly fetching from DB each time component
+        // mounts, we can fetch all users once, and save to redux
         axios.get('http://www.localhost:5000/'+this.props.userData[0].username)
         .then( (response) => {
             console.log("akhil")
@@ -200,7 +204,7 @@ class UserProfile extends React.Component{
                                                     username:this.props.userData[0].username
                                                 },
                                               }}
-                                            onClick={() => { console.log('onClick'); }}
+                                            onClick={() => { this.props.getStudentsForClass(classObject,classObject._id) }}
                                             // onClick={this.listItemClicked(i)}
                                             key={i} 
                                             className="listItem">
@@ -232,12 +236,24 @@ class UserProfile extends React.Component{
     }
 }
 
-const mapStateToProps = (store) => (
-    console.log(store),{
-      userData:store.logged.user
-    })
+const mapStateToProps = (state) => (
+    {
+      userData:state.logged.user,
+      classes:state.classes.classesTaken
+    }
+)
+function mapDispatchToProps(dispatch){
+    return {
+        getStudentsForClass:(classInfo,id)=>{
+            console.log(classInfo)
+            getStudentsForClass(dispatch,classInfo,id)
+        }
+    }
+}
+      
+    
 
-export default connect(mapStateToProps,null)(UserProfile)
+export default connect(mapStateToProps,mapDispatchToProps)(UserProfile)
 
 //Graphql,redis, mern stack, mongodb, 
 //graphql is for complicated queries
