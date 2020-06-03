@@ -10,11 +10,15 @@ export default class ClassmatesModal extends React.Component{
     constructor(props){
         super(props)
     }
-    
+    clickedClassmate = (classMate) =>{
+        this.props.addChatter(classMate.username)
+        this.props.closeModal()
+    }
     render () {
         return (
             <div id = "body">
                 <Dialog
+                    id="dialog"
                     open={this.props.modalOpened}
                     onclose={this.props.closeModal}
                     >
@@ -24,12 +28,15 @@ export default class ClassmatesModal extends React.Component{
                                         <ListItem
                                             button
                                             id="listItem"
-                                            // onClick={() => { this.props.getStudentsForClass(classObject,classObject._id) }}
+                                            onClick={() => this.clickedClassmate(classMate) }
                                             // onClick={this.listItemClicked(i)}
                                             key={i} 
                                             className="listItem">
                                             <ListItemText
                                                 primary={classMate.username}
+                                            />
+                                            <ListItemText
+                                                primary={classMate.courseName}
                                             />
                                         </ListItem>
                                 )})

@@ -11,7 +11,7 @@ export const getClassesForUser = (dispatch,username) =>{
                 });
                 var classes = response.data
                 for(var i = 0; i < classes.length; i++){
-                    addStudentsForEachClass(dispatch,classes[i]._id)
+                    addStudentsForEachClass(dispatch,classes[i]._id,username)
                 }
                 console.log(response.data)
             })
@@ -20,10 +20,12 @@ export const getClassesForUser = (dispatch,username) =>{
             });
 }
 
-export const addStudentsForEachClass = (dispatch,classId) =>{
+export const addStudentsForEachClass = (dispatch,classId,username) =>{
     axios.get('http://www.localhost:5000/course/' + classId)
     .then( (studentsResponse) => {
         console.log(studentsResponse.data);
+        studentsResponse.data = studentsResponse.data.filter(studInfo => studInfo.username != username)
+        console.log(studentsResponse.data)
         dispatch({
             type:'ADD_STUDENTS',
             payload:studentsResponse.data

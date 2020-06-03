@@ -14,9 +14,9 @@ class Chat extends React.Component{
   constructor(props){
     super(props);
     this.state={
-        username:this.props.location.state.username,
-        currentChatter:this.props.location.state.sendMessageTo,
-        chatters:[this.props.location.state.sendMessageTo],
+        username:this.props.username,
+        currentChatter:'',
+        chatters:[],
         allMessagesAndChats:{},
         messagesToShow:[],
         socket:io('http://localhost:4000/'),
@@ -25,6 +25,9 @@ class Chat extends React.Component{
     };
   }
   componentWillMount(){
+    if(this.props.location.state != null){
+      this.setState({currentChatter:this.props.location.state.sendMessageTo, chatters:[this.props.location.state.sendMessageTo]})
+    }
     console.log(this.props.connectedClients)
     if(this.props.connectedClients.socketID != ""){
       this.setState({allMessagesAndChats:this.props.connectedClients})
@@ -69,6 +72,12 @@ class Chat extends React.Component{
   setMessage = (message) =>{
     this.setState({message:message})
   }
+  addChatter = (chatterUsername) => {
+    const isChatterAlreadyInChatters = this.state.chatters.indexOf(chatterUsername)
+    console.log(isChatterAlreadyInChatters)
+    if(isChatterAlreadyInChatters == -1) this.setState({chatters:[...this.state.chatters, chatterUsername]})
+    this.changeChatter(chatterUsername)
+  }
   changeChatter = (classmate) =>{
     this.setState({currentChatter:classmate})//if messages are sent now, it will be sent to the current chatter.
     this.filterMessages(this.state.allMessagesAndChats,classmate)//you want to now show messages for the new focused current new chatter.
@@ -88,7 +97,7 @@ class Chat extends React.Component{
               <InfoBar openModal = {this.openModal} room={this.state.currentChatter}  />
               <Messages messages={this.state.messagesToShow} currentChatter={this.state.currentChatter} currentUser={this.state.username} />
               <Input message={this.state.message} setMessage={this.setMessage} sendMessage={this.sendMessage}/>
-              {this.state.modalOpened && <ClassmatesModal modalOpened={this.state.modalOpened}classMates={this.props.classMates} closeModal={this.closeModal}/>}
+              {this.state.modalOpened && <ClassmatesModal addChatter = {this.addChatter} changeChatter= {this.changeChatter} modalOpened={this.state.modalOpened}classMates={this.props.classMates} closeModal={this.closeModal}/>}
           </div>
         </div>
       );
@@ -99,7 +108,8 @@ const mapStateToProps = (state) => (
   console.log(state.classes.classMates[0]),
       {
         connectedClients:state.chatters,
-        classMates:state.classes.classMates[0]
+        classMates:state.classes.classMates,
+        username:state.logged.user[0].username
       }
 )
 
