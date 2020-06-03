@@ -4,6 +4,7 @@ import io from "socket.io-client";
 import Messages from '../Messages/Messages';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
+import ClassmatesModal from '../ClassmatesModal/ClassMates'
 import './Chat.css';
 import {List, ListItem, ListItemText, BottomNavigationAction} from '@material-ui/core'
 import Chatters from '../Chatters/Chatters'
@@ -19,11 +20,11 @@ class Chat extends React.Component{
         allMessagesAndChats:{},
         messagesToShow:[],
         socket:io('http://localhost:4000/'),
-        message:''
+        message:'',
+        modalOpened:false
     };
   }
   componentWillMount(){
-    console.log('yo')
     console.log(this.props.connectedClients)
     if(this.props.connectedClients.socketID != ""){
       this.setState({allMessagesAndChats:this.props.connectedClients})
@@ -73,14 +74,21 @@ class Chat extends React.Component{
     this.filterMessages(this.state.allMessagesAndChats,classmate)//you want to now show messages for the new focused current new chatter.
     console.log(this.state.connectedClients)
   }
+  openModal = () => {
+    this.setState({modalOpened:true})
+  }
+  closeModal = () => {
+    this.setState({modalOpened:false})
+  }
   render(){
       return (
         <div className="outerContainer">
           <Chatters chatters = {this.state.chatters} changeChatter={this.changeChatter} currentChatter={this.state.currentChatter}/>
           <div className="container">
-              <InfoBar room={this.state.currentChatter} />
+              <InfoBar openModal = {this.openModal} room={this.state.currentChatter}  />
               <Messages messages={this.state.messagesToShow} currentChatter={this.state.currentChatter} currentUser={this.state.username} />
-              <Input message={this.state.message} setMessage={this.setMessage} sendMessage={this.sendMessage} />
+              <Input message={this.state.message} setMessage={this.setMessage} sendMessage={this.sendMessage}/>
+              {this.state.modalOpened && <ClassmatesModal modalOpened={this.state.modalOpened}classMates={this.props.classMates} closeModal={this.closeModal}/>}
           </div>
         </div>
       );
@@ -88,9 +96,10 @@ class Chat extends React.Component{
 }
                                                    
 const mapStateToProps = (state) => (
-  console.log(state),
+  console.log(state.classes.classMates[0]),
       {
         connectedClients:state.chatters,
+        classMates:state.classes.classMates[0]
       }
 )
 

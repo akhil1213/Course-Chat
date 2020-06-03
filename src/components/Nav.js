@@ -27,90 +27,97 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  link:{
+    paddingLeft:3,
+    textDecoration:'none',
+    fontSize:20,
+    color:'white',
+  }
 }));
 
  function MenuAppBar(props) {
-  const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleChange = event => {
-    setAuth(event.target.checked);
-    if(!event.target.checked){
-      props.signOut();
-    }
-  };
-  const signOut = () => {
-    props.signOut();
-  }
-  const handleMenu = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  return (
-    <div className={classes.root}>
-      <FormGroup>
-        {props.isLogged && (
-          <FormControlLabel
-            control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
-            label={auth ? 'Logout' : 'Login'}
-          />
-        )
+        const classes = useStyles();
+        const [auth, setAuth] = React.useState(true);
+        const [anchorEl, setAnchorEl] = React.useState(null);
+        const open = Boolean(anchorEl);
+        const handleChange = event => {
+          setAuth(event.target.checked);
+          if(!event.target.checked){
+            props.signOut();
+          }
+        };
+        const signOut = () => {
+          props.signOut();
         }
-      </FormGroup>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Course-Chat
-          </Typography>
-          {/* {auth && ( */}
-            <div>
-              {props.isLogged===false && (<Link to ="/signup">Sign up</Link>)}
-              {props.isLogged===false && (<Link to ="/login">Login</Link>)}
-              {props.isLogged && <Link to ="/signup" onClick={signOut}>Log Out</Link>}
-              {props.isLogged && <Link to ="/profile">Profile</Link>}
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+        const handleMenu = event => {
+          setAnchorEl(event.currentTarget);
+        };
 
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                {props.isLogged && <MenuItem onClick={signOut}><Link to ="/signup">Log Out</Link></MenuItem>}
-                <MenuItem onClick={handleClose}><Link to ="/signup">Sign up</Link></MenuItem>
-                <MenuItem onClick={handleClose}><Link to ="/profile" >User Profile</Link></MenuItem>
-              </Menu>
-            </div>
-          {/* )} */}
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+        const handleClose = () => {
+          setAnchorEl(null);
+        };
+
+        return (
+          <div className={classes.root}>
+            <FormGroup>
+              {props.isLogged && (
+                <FormControlLabel
+                  control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
+                  label={auth ? 'Logout' : 'Login'}
+                />
+              )}
+            </FormGroup>
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                  <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                  Course-Chat
+                </Typography>
+                {/* {auth && ( */}
+                  <div>
+                    {props.isLogged===false && (<Link className = {classes.link}   to ="/signup">Sign up</Link>)}
+                    {props.isLogged===false && (<Link className = {classes.link} to ="/login">Login</Link>)}
+                    {props.isLogged && <Link className = {classes.link} to ="/profile">Profile</Link>}
+                    {props.isLogged && <Link className = {classes.link} to ="/chat">Messages</Link>} 
+                    {props.isLogged && <Link className = {classes.link} to ="/signup" onClick={signOut}>LogOut</Link>}
+
+                    <IconButton
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      onClick={handleMenu}
+                      color="inherit"
+                    >
+                      <AccountCircle />
+                    </IconButton>
+
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      open={open}
+                      onClose={handleClose}
+                    >
+                      {props.isLogged && <MenuItem onClick={signOut}><Link to ="/signup">Log Out</Link></MenuItem>}
+                      <MenuItem onClick={handleClose}><Link to ="/signup">Sign up</Link></MenuItem>
+                      <MenuItem onClick={handleClose}><Link to ="/profile" >User Profile</Link></MenuItem>
+                    </Menu>
+                  </div>
+                {/* )} */}
+              </Toolbar>
+            </AppBar>
+          </div>
+        );
 }
 const mapStateToProps = (store) => (
   console.log(store),{

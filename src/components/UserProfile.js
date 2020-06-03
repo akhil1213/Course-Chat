@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import uuid from 'uuid'
 import {connect,dispatch} from 'react-redux'
-import {addClass, getStudentsForClass} from '../redux/actions/classActions'
+import {addClass, getStudentsForClass, getClassesForUser} from '../redux/actions/classActions'
 
 //import logoimage from '../images/logoimage.jpeg';
 
@@ -50,20 +50,12 @@ class UserProfile extends React.Component{
         //     const {username,fullName, college, email} = this.props.userData[0]
         // }
         // window.history.pushState(null, document.title, window.location.href);
-        window.addEventListener('popstate', function (event){
-            // window.history.pushState(null, document.title,  window.location.href);
-        });
+        // window.addEventListener('popstate', function (event){
+        //     // window.history.pushState(null, document.title,  window.location.href);
+        // });
         //instead of having user constantly fetching from DB each time component
         // mounts, we can fetch all users once, and save to redux
-        axios.get('http://www.localhost:5000/'+this.props.userData[0].username)
-        .then( (response) => {
-            console.log("akhil")
-            console.log(response.data);
-            this.setState({classes:response.data});
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        // this.props.getClassesForUser(this.props.userData[0].username);
     }
     updateProfessorname = (event) => {
         this.setState({profName: event.target.value});
@@ -239,7 +231,7 @@ class UserProfile extends React.Component{
 const mapStateToProps = (state) => (
     {
       userData:state.logged.user,
-      classes:state.classes.classesTaken
+      classes:state.classes.currentClasses
     }
 )
 function mapDispatchToProps(dispatch){
@@ -247,7 +239,7 @@ function mapDispatchToProps(dispatch){
         getStudentsForClass:(classInfo,id)=>{
             console.log(classInfo)
             getStudentsForClass(dispatch,classInfo,id)
-        }
+        },
     }
 }
       

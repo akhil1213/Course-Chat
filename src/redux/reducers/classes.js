@@ -1,19 +1,26 @@
 const initialState = {
-    classesTaken:[],
+    currentClasses:[],
     queriedClasses:[],
-    classInfo:{}
+    classInfo:{},
+    classMates:[]
 }
 export default function(state = initialState,action){
     switch(action.type){
         case 'ADD_CLASS':
             return{
                 ...state,
-                classes:[...state.classes,action.payload]
+                currentClasses:[...state.currentClasses,action.payload]
             }
+        case 'ADD_STUDENTS':{
+            return{
+                ...state,
+                classMates:[...state.classMates,action.payload]
+            }
+        }
         case 'GET_CLASSES_FROM_DB':
             return{
                 ...state,
-                classesTaken:action.payload
+                currentClasses:action.payload
             }
         case 'GET_QUERIED_CLASSES_FROM_DB':
             return{
