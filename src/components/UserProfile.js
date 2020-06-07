@@ -80,7 +80,8 @@ class UserProfile extends React.Component{
             courseName:this.state.class,
             profName:this.state.profName,
             time:this.state.time,
-            username:this.props.userData[0].username
+            username:this.props.userData[0].username,
+            nameOfUser:this.props.userData[0].fullName
         }).then().catch( (error) => {
             console.log(error);
         });
@@ -95,6 +96,10 @@ class UserProfile extends React.Component{
     //console.log("profile",this.props.location.state.username);
     listItemClicked = (i) => {
         console.log(i);
+    }
+    delete = (id) =>{
+        console.log(id)
+        axios.delete(`http://localhost:5000/${id}`).then().catch( (error)=> console.log(error))
     }
     render(){
         return(
@@ -210,7 +215,7 @@ class UserProfile extends React.Component{
                                                 primary={classObject.time}
                                             />
                                             <ListItemSecondaryAction>
-                                                <IconButton>
+                                                <IconButton onClick={()=>{this.delete(classObject._id)}}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                                 <IconButton>

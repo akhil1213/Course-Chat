@@ -28,8 +28,8 @@ router.get("/course/:id", (req,res) => {
             Class.find({courseName:classInfo.courseName, profName:classInfo.profName, time:classInfo.time})
                 .then(usersInClass =>{
                     res.json(usersInClass)
-                })
-        });
+                }).catch((err) => console.log(err))
+        }).catch((err) => console.log(err));
 });
 //select * from classes where username = "StudentA's username"
 // @route POST api/items
@@ -50,11 +50,13 @@ router.get("/course/:id", (req,res) => {
 // },
 router.post("/",  (req,res) => {
     console.log("post worked!s")
+    console.log(req.body)
     const newClass = new Class({
         courseName: req.body.courseName,
         profName:req.body.profName,
         time:req.body.time,
-        username:req.body.username
+        username:req.body.username,
+        nameOfUser:req.body.nameOfUser
     });
     newClass.save().then(item => res.json(item));
 })
@@ -65,8 +67,10 @@ router.post("/",  (req,res) => {
 //what if somebody drops a class
 //we probably arent even going to ues cuny first so whatever
 router.delete("/:id",(req,res) => {
+    console.log(req.params.id)
     Class.findByIdAndRemove({ _id:req.params.id }, (err,data) => {
-        console.log(err);
+        if (err) return res.json({success:false, error:err})
+        return res.json({success:true})//must return over here, this caused a bug in the backend and i wasnt able to log in from the front end.
     })
 })//if user gives wrong id we catch error
 

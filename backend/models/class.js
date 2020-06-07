@@ -11,13 +11,16 @@ const ClassSchema = new Schema({
         required: true
     },
     time:{
-        type:String,
+        type:String,    
         required: true,
     },
     username:{
         type:String,
         required:true
     },
+    nameOfUser:{
+        type:String,
+    }
 });
 //if we don't export, we can't import.
 module.exports = Class = mongoose.model('class', ClassSchema);//now we can bring this model into other files.

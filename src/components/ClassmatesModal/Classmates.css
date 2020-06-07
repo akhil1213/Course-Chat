@@ -10,3 +10,6 @@
 #dialog{
     width:50%;
 } */
+#listItem, .listItem{
+    border-bottom:0px
+}

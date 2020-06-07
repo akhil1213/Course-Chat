@@ -46,6 +46,7 @@ class Chat extends React.Component{
         console.log(this.props.connectedClients)
 
     });
+    // this.props.classMates
   }
   componentWillUnmount(){
     // this.props.updateConnectedClients(this.state.connectedClients)

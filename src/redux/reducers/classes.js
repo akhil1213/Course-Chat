@@ -11,10 +11,11 @@ export default function(state = initialState,action){
                 ...state,
                 currentClasses:[...state.currentClasses,action.payload]
             }
-        case 'ADD_STUDENTS':{
+        case 'SET_STUDENTS':{
+            console.log(action.payload)  
             return{
                 ...state,
-                classMates:state.classMates.concat(action.payload)//action.payload is an array itself so we must use concat
+                classMates:action.payload//action.payload is an array itself so we must use concat
             }
         }
         case 'GET_CLASSES_FROM_DB':
