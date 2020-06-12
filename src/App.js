@@ -1,7 +1,7 @@
 import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
-import Feed from './components/Feed';
+import Feed from './components/Feed/Feed';
 import Signup from './components/Signup';
 import Login from './components/login'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';

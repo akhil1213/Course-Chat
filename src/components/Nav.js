@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -47,6 +47,8 @@ const useStyles = makeStyles(theme => ({
           }
         };
         const signOut = () => {
+          localStorage.setItem('state',undefined)
+          localStorage.setItem('token','')
           props.signOut();
         }
         const handleMenu = event => {
@@ -59,14 +61,14 @@ const useStyles = makeStyles(theme => ({
 
         return (
           <div className={classes.root}>
-            <FormGroup>
+            {/* <FormGroup>
               {props.isLogged && (
                 <FormControlLabel
                   control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
                   label={auth ? 'Logout' : 'Login'}
                 />
               )}
-            </FormGroup>
+            </FormGroup> */}
             <AppBar position="static">
               <Toolbar>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">

@@ -123,7 +123,7 @@ router.post(
             })
             .catch(error => {
                 return res.status(401).json({
-                    message: "Authenication failed!"
+                    message: "Authentication failed!"
                 });
             });
         }
@@ -134,6 +134,12 @@ router.get('/get/user',auth,(req,res)=>{
         .then(user => {
             res.json(user)
             console.log(user)
+        })
+        .catch(err => {
+            console.log(err)
+            return res.status(401).json({
+                message:'No token'
+            })
         });
 })
 module.exports = router;

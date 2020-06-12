@@ -109,3 +109,6 @@ body{
   display:flex;
   flex:row;
 }
+.unfocused:hover{
+  background-color:#5c6a6b
+}

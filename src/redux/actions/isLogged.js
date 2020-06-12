@@ -38,6 +38,7 @@ export const login = (dispatch,history,username,password) =>{
         history.push('/')
         loadUser(dispatch)
     }).catch( (err) => {
+        console.log(err.response)
         dispatch(returnErrors(err.response.data,err.response.status,'LOGIN_FAIL'))//register_fail
         dispatch({
             type:'LOGIN_FAIL'
@@ -112,7 +113,7 @@ export const loadUser = (dispatch) => {
         }).catch(err => {
             console.log(err)
             // dispatch(returnErrors(err.response.data,err.response.status))
-            dispatch({type:"AUTH_ERROR"})
+            dispatch({type:"AUTH_ERROR",payload:err})
         })
 }
 export const setConfig = () =>{
