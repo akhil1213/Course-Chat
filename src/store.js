@@ -6,13 +6,18 @@ import chattersReducer from './redux/reducers/chatters'
 import classesReducer from './redux/reducers/classes'
 
 const middleware = [thunk];
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     logged:loggedReducer,
     error:errorReducer,
     chatters:chattersReducer,
     classes:classesReducer
 })
-
+const rootReducer = (state, action) => {
+    if (action.type === 'SIGN_OUT') {
+        state = undefined
+    }
+    return appReducer(state, action)
+}
 function saveToLocalStorage(state){
     try{
         const serializedState = JSON.stringify(state)

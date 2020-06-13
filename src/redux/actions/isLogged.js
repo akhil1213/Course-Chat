@@ -35,8 +35,8 @@ export const login = (dispatch,history,username,password) =>{
         dispatch({
             type:'SIGN_IN'
         })
-        history.push('/')
-        loadUser(dispatch)
+        loadUser(dispatch,history)
+        
     }).catch( (err) => {
         console.log(err.response)
         dispatch(returnErrors(err.response.data,err.response.status,'LOGIN_FAIL'))//register_fail
@@ -68,8 +68,8 @@ export const register = (dispatch,history,fullName,email,username,password,colle
         // const user = jwt_decode(token)
         // console.log(user)
         // dispatch(setCurrentUser(user));
-        loadUser(dispatch)
-        history.push('/')
+        loadUser(dispatch,history)
+        
     }).catch( (err) => {
         dispatch(returnErrors(err.response.data,err.response.status,'REGISTER_FAIL'))//register_fail
         dispatch({
@@ -101,7 +101,7 @@ export const loginFailed = (dispatch,err) => {
     })
     console.log(err.response.data)
 }
-export const loadUser = (dispatch) => {
+export const loadUser = (dispatch,history) => {
     // User loading
     // dispatch({type: "USER_LOADING"})
     //get token from local storage
@@ -110,6 +110,7 @@ export const loadUser = (dispatch) => {
         .then(res => {
             console.log(res.data[0].username)
             dispatch({type: "USER_LOADED", payload:res.data})
+            history.push('/')
         }).catch(err => {
             console.log(err)
             // dispatch(returnErrors(err.response.data,err.response.status))

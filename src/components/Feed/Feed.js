@@ -17,12 +17,10 @@ const useStyles = makeStyles({
 })
 function Feed(props) {
     const classes = useStyles()
-    const [focusedClass,setFocusedClass] = useState(props.classes[0].courseName)
-    // useEffect(() => {
-    //   setFocusedClass(props.classes[0].courseName)
-    //   console.log(props.classes)
-    //   console.log(focusedClass)
-    // }, [props.classes]);
+    const [focusedClass,setFocusedClass] = useState('')
+    useEffect(() => {
+      if(props.userData == null) props.history.push('/login')
+    });
     return (
       <div className={classes.spaceFromLeft} >
         <Grid container spacing = {3}>
