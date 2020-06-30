@@ -14,7 +14,7 @@ class Chat extends React.Component{
   constructor(props){
     super(props);
     this.state={
-        username:this.props.username,
+        username:this.props.username.username,
         currentChatter:'',
         chatters:[],
         allMessagesAndChats:{},
@@ -104,13 +104,16 @@ class Chat extends React.Component{
       );
   }
 }
-                                                   
+Chat.defaultProps = {
+  connectedClients:[],
+  classMates:[],
+  username:{username:'akhil'}
+}                                                   
 const mapStateToProps = (state) => (
-  console.log(state.classes.classMates[0]),
       {
         connectedClients:state.chatters,
         classMates:state.classes.classMates,
-        username:state.logged.user[0].username
+        username:state.logged.user
       }
 )
 

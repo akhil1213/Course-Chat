@@ -19,14 +19,13 @@ import store from './store'
 import {dispatch, connect} from 'react-redux'
 class App extends React.Component {
   componentDidMount(){
-    console.log("lets get it")
     this.props.loadUser()
   }
   render(){
     return ( 
       <Router>
         <div className="App">
-          <Nav />
+          <Nav/>
           <Route path="/" exact component={Feed}/>
           <Route path="/signup" component={Signup}/>
           <Route path="/login" component={Login}/>

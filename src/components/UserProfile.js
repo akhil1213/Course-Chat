@@ -47,7 +47,7 @@ class UserProfile extends React.Component{
         // if(this.props.location.state.username!= null){
         //     const {username,fullName, college, email} = this.props.location.state
         // }else{
-        //     const {username,fullName, college, email} = this.props.userData[0]
+        //     const {username,fullName, college, email} = this.props.userData
         // }
         // window.history.pushState(null, document.title, window.location.href);
         // window.addEventListener('popstate', function (event){
@@ -55,7 +55,7 @@ class UserProfile extends React.Component{
         // });
         //instead of having user constantly fetching from DB each time component
         // mounts, we can fetch all users once, and save to redux
-        // this.props.getClassesForUser(this.props.userData[0].username);
+        // this.props.getClassesForUser(this.props.userData.username);
     }
     updateProfessorname = (event) => {
         this.setState({profName: event.target.value});
@@ -71,7 +71,7 @@ class UserProfile extends React.Component{
             courseName:this.state.class,
             profName:this.state.profName,
             time:this.state.time,
-            username:this.props.userData[0].username
+            username:this.props.userData.username
         };
         this.state.classes.push(newClass);
         this.setState({classes:this.state.classes});
@@ -80,8 +80,8 @@ class UserProfile extends React.Component{
             courseName:this.state.class,
             profName:this.state.profName,
             time:this.state.time,
-            username:this.props.userData[0].username,
-            nameOfUser:this.props.userData[0].fullName
+            username:this.props.userData.username,
+            nameOfUser:this.props.userData.fullName
         }).then().catch( (error) => {
             console.log(error);
         });
@@ -111,15 +111,15 @@ class UserProfile extends React.Component{
                         </div>
                         <div id = "nameandcollege">
                             <div id = "fullname">
-                                <p>{this.props.userData[0].fullName}</p>
+                                <p>{this.props.userData.fullName}</p>
                             </div>
                             <div id = "college">
-                                <p>Student @ {this.props.userData[0].college}</p>
+                                <p>Student @ {this.props.userData.college}</p>
                             </div>
                         </div>
                     </div>
-                    <p>The username is {this.props.userData[0].username}</p>
-                    <p>Your current email set is:{this.props.userData[0].email}</p>
+                    <p>The username is {this.props.userData.username}</p>
+                    <p>Your current email set is:{this.props.userData.email}</p>
                 </div>
                     <div id = "listItems">
                     <List id = "list">
@@ -198,7 +198,7 @@ class UserProfile extends React.Component{
                                                     className:classObject.courseName,
                                                     profName:classObject.profName,
                                                     time:classObject.time,
-                                                    username:this.props.userData[0].username
+                                                    username:this.props.userData.username
                                                 },
                                               }}
                                             onClick={() => { this.props.getStudentsForClass(classObject,classObject._id) }}

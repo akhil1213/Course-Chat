@@ -47,7 +47,7 @@ router.post(
                 fullName,
                 college
             });
-
+            
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(password, salt);
 
@@ -98,6 +98,7 @@ router.post(
                 })
             .then(result => {
                 if(!result) {
+                    console.log("wrong password")
                     return res.status(401).json({
                     message: "Wrong password"
                     });
@@ -112,7 +113,12 @@ router.post(
                             expiresIn: 100000
                         },
                         (err, token) => {
-                            if (err) throw err;
+                            console.log(err)
+                            if (err) {
+                                console.log(err)
+                            }else{
+                                console.log("ayyay")
+                            }
                             res.status(200).json({
                                 message: 'User logged in heres ur token!',
                                 token

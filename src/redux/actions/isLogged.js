@@ -10,11 +10,17 @@ export function signIn(){
             //payload:true
     }
 }
-export function signOut(){
-    return {
+export function signOut(dispatch){
+    dispatch({
             type: SIGN_OUT,
             //payload:false
-    }
+    })
+    dispatch({
+        type: 'LOGOUT_SUCCESS',
+        //payload:false
+    })
+    
+
 }
 export const login = (dispatch,history,username,password) =>{
     const config = {
@@ -26,20 +32,20 @@ export const login = (dispatch,history,username,password) =>{
 
     axios.post('http://localhost:5000/login',body,config)
     .then(res => {
-        console.log(res.data)
         dispatch({
             type:'LOGIN_SUCCESS',
             payload:res.data
+            //gets user token after logging in and same for sign up.
         })
         getClassesForUser(dispatch,username)
         dispatch({
             type:'SIGN_IN'
         })
-        loadUser(dispatch,history)
+        loadUser(dispatch,history)//gets user information.
         
     }).catch( (err) => {
         console.log(err.response)
-        dispatch(returnErrors(err.response.data,err.response.status,'LOGIN_FAIL'))//register_fail
+        // dispatch(returnErrors(err.response.data,err.response.status,'LOGIN_FAIL'))//register_fail
         dispatch({
             type:'LOGIN_FAIL'
         })
@@ -60,7 +66,7 @@ export const register = (dispatch,history,fullName,email,username,password,colle
         const {token } = res.data
         dispatch({
             type:'REGISTER_SUCCESS',
-            payload:res.data
+            payload:res.data[0]
         })
         dispatch({
             type:'SIGN_IN'
@@ -109,7 +115,7 @@ export const loadUser = (dispatch,history) => {
     axios.get("http://localhost:5000/get/user",config)
         .then(res => {
             console.log(res.data[0].username)
-            dispatch({type: "USER_LOADED", payload:res.data})
+            dispatch({type: "USER_LOADED", payload:res.data[0]})
             history.push('/')
         }).catch(err => {
             console.log(err)
