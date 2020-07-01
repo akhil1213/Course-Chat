@@ -25,3 +25,13 @@ input:focus, textarea:focus, select:focus{
   border: none;
   width: 20%;
 }
+.redSendButton {
+  color: #fff !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: red;
+  padding: 20px;
+  display: inline-block;
+  border: none;
+  width: 20%;
+}

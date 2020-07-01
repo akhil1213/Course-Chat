@@ -5,8 +5,10 @@ import './Message.css';
 import ReactEmoji from 'react-emoji';
 
 const Message = ({ message, currentChatter, username }) => {
-  // console.log(message)
-  var text = message.text
+  console.log(message)
+  console.log(username)
+  var text = message.text || message.message// from the backend, i have field name as message but from the frontend i have the field name as text
+
   // //these messages can be either from someone sending it to us but if not 
   // //then when we're sending the message so user is the person we're sending the message to.
   // var user = null;
@@ -29,7 +31,7 @@ const Message = ({ message, currentChatter, username }) => {
   // if(user === from){
   //   isSentByWantedSender=true
   // }
-  if(message.from!=null){//current person is receiving the message.
+  if(message.from!=null && message.from != username){//if the message isnt from the current user or it isnt null then its sent by the current user
     isSentByCurrentUser = false;
     senderName = message.from.trim().toLowerCase();
   }

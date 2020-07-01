@@ -33,7 +33,7 @@ router.get("/course/:id", (req,res) => {
 });
 //select * from classes where username = "StudentA's username"
 // @route POST api/items
-//@desc Create a post
+//@desc Create a new class
 // @access public
 
 // courseName:{

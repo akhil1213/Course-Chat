@@ -13,9 +13,10 @@ mongoose.connect('mongodb+srv://akhil:akhil123@cluster0-ucvbp.mongodb.net/test?r
 })
 const classRoutes = require('./routes/api/classes')
 const userRoutes = require('./routes/api/users')
+const messageRoutes = require('./routes/api/messages')
 app.use('/', classRoutes);
 app.use('/', userRoutes);
-
+app.use('/messages/', messageRoutes)
 
 app.listen(5000, function(){
     console.log("course chat working server");

@@ -49,7 +49,7 @@ export const getClassesForUser = (dispatch,username) =>{
                     let allStudents = [].concat(...students)
                     allStudents = sortAndGetRidOfDuplicates(allStudents)
                     //students can take multiple courses together and we are querying for each class so here can be duplicated classmates
-                    allStudents.filter(studInfo => studInfo.username != username)//current user's classmates don't include himself by definition.
+                    allStudents = allStudents.filter(studInfo => studInfo.username != username)//current user's classmates don't include himself by definition.
                     dispatch({
                         type:'SET_STUDENTS',
                         payload:allStudents
