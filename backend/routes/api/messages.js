@@ -40,7 +40,6 @@ router.get("/:user/chatters", (req,res) => {
 });
 
 router.post("/",  (req,res) => {
-
     console.log(req.body)
     const newMessage = new Message({
         from: req.body.from,

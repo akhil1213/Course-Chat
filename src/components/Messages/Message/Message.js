@@ -5,8 +5,8 @@ import './Message.css';
 import ReactEmoji from 'react-emoji';
 
 const Message = ({ message, currentChatter, username }) => {
-  console.log(message)
-  console.log(username)
+  // console.log(message)
+  // console.log(username)
   var text = message.text || message.message// from the backend, i have field name as message but from the frontend i have the field name as text
 
   // //these messages can be either from someone sending it to us but if not 

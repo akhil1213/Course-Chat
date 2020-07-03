@@ -5,11 +5,10 @@ const initialState = {
 }
 export default function(state = initialState,action){
     switch(action.type){
-        case 'UPDATE_CONNECTED_CLIENTS':
+        case 'set_messages_and_chatters_from_db':
             return{
                 chatters:action.payload.chatters,
                 messages:action.payload.messages,
-                socketId:action.payload.socketId
             }
         case 'ADD_MESSAGE':
             return{

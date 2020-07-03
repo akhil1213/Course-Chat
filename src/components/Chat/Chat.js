@@ -10,6 +10,7 @@ import {List, ListItem, ListItemText, BottomNavigationAction} from '@material-ui
 import Chatters from '../Chatters/Chatters'
 import { connect } from 'react-redux';
 import axios from 'axios'
+import chatters from "../../redux/reducers/chatters";
 class Chat extends React.Component{
   constructor(props){
     super(props);
@@ -17,60 +18,85 @@ class Chat extends React.Component{
         username:this.props.user.username,
         currentChatter:'',
         chatters:[],
-        allMessagesAndChatters:{},
-        messagesToShow:[],
+        allMessages:[],
+        messagesToShow:[],//messages get filtered 
         socket:io('http://localhost:4000/'),
         message:'',
         modalOpened:false
     };
   }
   componentWillMount(){
+
     let allMessagesAndChatters = {}
-    axios.get(`http://localhost:5000/messages/${this.state.username}/chatters`)
-    .then(res=>{
-      const chattersWithoutCurrentUser = res.data.filter(chatter => chatter != this.state.username)
-      allMessagesAndChatters.chatters = chattersWithoutCurrentUser
-      this.setState({chatters:chattersWithoutCurrentUser})
-    })
-    axios.get(`http://localhost:5000/messages/${this.state.username}`)
-    .then(res=>{
-      allMessagesAndChatters.messages = res.data
-      console.log(allMessagesAndChatters)
-      this.setState({allMessagesAndChatters:allMessagesAndChatters})
-      this.props.updateConnectedClients(allMessagesAndChatters)
-    })
-    if(this.props.location.state != null){
-      this.setState({currentChatter:this.props.location.state.sendMessageTo, chatters:[this.props.location.state.sendMessageTo]})
+    if (this.props.allMessages.length !== 0){
+      this.setState({allMessages:this.props.allMessages})
+      this.setState({allChatters:this.props.allChatters})
+    }else{
+      axios.get(`http://localhost:5000/messages/${this.state.username}/chatters`)
+      .then(res=>{
+        const allChattersWithoutCurrentUser = res.data.filter(chatter => chatter != this.state.username)
+        allMessagesAndChatters.chatters = allChattersWithoutCurrentUser
+        this.setState({chatters:allChattersWithoutCurrentUser})
+      })
+      axios.get(`http://localhost:5000/messages/${this.state.username}`)
+      .then(res=>{
+        allMessagesAndChatters.messages = res.data
+        this.setState({allMessages:allMessagesAndChatters.messages})
+        this.props.setMessagesAndChatters(allMessagesAndChatters)
+      })
+      if(this.props.location.state != null){
+        this.setState({currentChatter:this.props.location.state.sendMessageTo, chatters:[this.props.location.state.sendMessageTo]})
+      }
     }
-    console.log(this.props.connectedClients)
-    if(this.props.connectedClients.socketID != ""){
-      this.setState({allMessagesAndChatters:this.props.connectedClients})
-      this.setState({chatters:this.props.connectedClients.chatters})
-      this.filterMessages(this.props.connectedClients,this.state.currentChatter)
-    }
+    
+    // console.log(this.props.connectedClients)
+    //dont really need below code because now we have a database.
+    // if(this.props.connectedClients.socketID != ""){
+    //   this.setState({allMessages:this.props.connectedClients})
+    //   this.setState({chatters:this.props.connectedClients.chatters})
+    //   this.filterMessages(this.props.connectedClients,this.state.currentChatter)
+    // }
+
     // this.filterMessages(this.props.connectedClients)
     /*get messages from redux state because if you don't, messages aren't saved. it's either
     this or you keep asking for the messages from socket.io which is too many calls.*/
-    this.state.socket.emit('user_connected',this.state.username,this.props.connectedClients)
-    this.state.socket.on('private_message', (messagesAndChatters) => {
-        this.props.updateConnectedClients(messagesAndChatters)//set connected clients to redux
-        this.setState({chatters:messagesAndChatters.chatters})
-        this.setState({allMessagesAndChatters:messagesAndChatters})
-        this.filterMessages(messagesAndChatters,this.state.currentChatter)
-        console.log(this.props.connectedClients)
+    this.state.socket.emit('user_connected',this.state.username)
+    this.state.socket.on('private_message', (message,to) => {
+        var message = {
+          from:this.state.username,
+          to:to,
+          message:message
+          //missing id and created_at but that is stored on the backend, this can cause a problem later on
+        }
+        this.props.addMessage(message)//add message to redux
+        //if the message is being sent to a new chatter, update redux and current state.
+
+        // if(this.state.chatters.findIndex(to) == -1) {
+        //   this.setState({
+        //     chatters: [...this.state.chatters, to]
+        //   })
+        //   this.props.addChatter(to)
+        // }
+        console.log(message)
+        this.setState({
+          allMessages:[...this.state.allMessages,message]
+        })
+        // this.setState({chatters:messagesAndChatters.chatters})
+        // this.setState({allMessages:messagesAndChatters})
+        this.filterMessages(this.state.allMessages,this.state.currentChatter)
     });
     // this.props.classMates
   }
   componentWillUnmount(){
     // this.props.updateConnectedClients(this.state.connectedClients)
   }
-  filterMessages = (allMessagesAndChatters,currentChatter) => {
+  filterMessages = (allMessages,currentChatter) => {
     var messagesToShow = []
     var messageIndex = 0;
     //regular filtering doesn't work for some reason.
-    for(var i = 0; i < allMessagesAndChatters.messages.length; i++){
-      if(allMessagesAndChatters.messages[i].from == currentChatter || allMessagesAndChatters.messages[i].to === currentChatter){
-        messagesToShow[messageIndex++] = allMessagesAndChatters.messages[i]
+    for(var i = 0; i < allMessages.length; i++){
+      if(allMessages[i].from == currentChatter || allMessages[i].to === currentChatter){
+        messagesToShow[messageIndex++] = allMessages[i]
       }
     }
     console.log(messagesToShow)
@@ -105,8 +131,7 @@ class Chat extends React.Component{
   }
   changeChatter = (classmate) =>{
     this.setState({currentChatter:classmate})//if messages are sent now, it will be sent to the current chatter.
-    this.filterMessages(this.state.allMessagesAndChatters,classmate)//you want to now show messages for the new focused current new chatter.
-    console.log(this.state.connectedClients)
+    this.filterMessages(this.state.allMessages,classmate)//you want to now show messages for the new focused current new chatter.
   }
   openModal = () => {
     this.setState({modalOpened:true})
@@ -135,7 +160,8 @@ Chat.defaultProps = {
 }                                                   
 const mapStateToProps = (state) => (
       {
-        connectedClients:state.chatters,
+        allMessages:state.chatters.messages,
+        allChatters:state.chatters.chatters,
         classMates:state.classes.classMates,
         user:state.logged.user
       }
@@ -143,10 +169,22 @@ const mapStateToProps = (state) => (
 
 function mapDispatchToProps(dispatch){
   return {
-    updateConnectedClients:(connectedClients)=>{
+    setMessagesAndChatters:(allMessages)=>{
       dispatch({
-        type:'UPDATE_CONNECTED_CLIENTS',
-        payload:connectedClients
+        type:'set_messages_and_chatters_from_db',
+        payload:allMessages
+      })
+    },
+    addMessage:(message)=>{
+      dispatch({
+        type:'ADD_MESSAGE',
+        payload:message
+      })
+    },
+    addChatter:(chatter)=>{
+      dispatch({
+        type:'ADD_CHATTER',
+        payload:chatter
       })
     }
   }
