@@ -26,14 +26,17 @@ class Chat extends React.Component{
     };
   }
   componentWillMount(){
-
-    let allMessagesAndChatters = {}
+    console.log('mounted again')
+    let allMessagesAndChatters = {}   
     if (this.props.allMessages.length !== 0){
+      //this is so we only call to the database once, and redux has all the data stored from the db. 
       this.setState({allMessages:this.props.allMessages})
-      this.setState({allChatters:this.props.allChatters})
+      this.setState({chatters:this.props.allChatters})
+      // don't even need state, we can use this props allMessages instead of using the state. maybe will change that later to clean it up
     }else{
       axios.get(`http://localhost:5000/messages/${this.state.username}/chatters`)
       .then(res=>{
+        console.log(res.data)
         const allChattersWithoutCurrentUser = res.data.filter(chatter => chatter != this.state.username)
         allMessagesAndChatters.chatters = allChattersWithoutCurrentUser
         this.setState({chatters:allChattersWithoutCurrentUser})
@@ -43,11 +46,27 @@ class Chat extends React.Component{
         allMessagesAndChatters.messages = res.data
         this.setState({allMessages:allMessagesAndChatters.messages})
         this.props.setMessagesAndChatters(allMessagesAndChatters)
+      }).then(() =>{
+        console.log('yay')
+        if(this.props.location.state != null){
+          console.log('only when u come from class component')
+          const newChatter = this.props.location.state.sendMessageTo
+          this.setState({currentChatter:newChatter})
+          if(!this.props.allChatters.includes(newChatter)) this.setState({chatters:[...this.state.chatters,newChatter]})
+          this.filterMessages(this.props.allMessages, newChatter)
+        }
       })
-      if(this.props.location.state != null){
-        this.setState({currentChatter:this.props.location.state.sendMessageTo, chatters:[this.props.location.state.sendMessageTo]})
-      }
     }
+    if(this.props.location.state != null){
+      console.log('only when u come from class component')
+      const newChatter = this.props.location.state.sendMessageTo
+      this.setState({currentChatter:newChatter})
+      // console.log(thi)
+      if(!this.props.allChatters.includes(newChatter)) this.setState({chatters:[...this.state.chatters,newChatter]})
+      this.filterMessages(this.props.allMessages, newChatter)
+    }
+    this.setState({chatters:this.props.allChatters})
+    this.filterMessages(this.props.allMessages, this.state.currentChatter)
     
     // console.log(this.props.connectedClients)
     //dont really need below code because now we have a database.
@@ -61,10 +80,10 @@ class Chat extends React.Component{
     /*get messages from redux state because if you don't, messages aren't saved. it's either
     this or you keep asking for the messages from socket.io which is too many calls.*/
     this.state.socket.emit('user_connected',this.state.username)
-    this.state.socket.on('private_message', (message,to) => {
+    this.state.socket.on('private_message', (message,from) => {
         var message = {
-          from:this.state.username,
-          to:to,
+          from:from,
+          to:this.state.username,
           message:message
           //missing id and created_at but that is stored on the backend, this can cause a problem later on
         }
@@ -107,19 +126,24 @@ class Chat extends React.Component{
     if(this.state.message != '') {
       this.state.socket.emit('sendPrivateMessage', this.state.message,this.state.username,this.state.currentChatter, () => this.setMessage(''));
     }
-    
     const newMessage = {
       message:this.state.message,
       from: this.state.username,
       to:this.state.currentChatter
     };
+    this.props.addMessage(newMessage)
+    this.setState({allMessages:[...this.state.allMessages,newMessage]})
+    this.filterMessages(this.state.allMessages,this.state.currentChatter)
     this.setMessage('')
 
+    //save message to database, but i have it commented bcause too many messages will cause overflow.
     // axios.post('http://localhost:5000/messages/',newMessage)
     // .then(()=>console.log('message posted correctly')).catch( (error) => {
     //     console.log(error);
     // });
+
   }
+
   setMessage = (message) =>{
     this.setState({message:message})
   }

@@ -6,6 +6,9 @@ const router = express.Router();
 const Message = require('../../models/message');
 const auth = require("../../middleware/auth")
 
+// function getRidOfDuplicates(distinctUsersWithDuplicates){
+
+// }
 // @route GET api/messages 
 //@desc Get all messages for a certain user in ascending order so from earliest date to highest date
 // @access public .. should be private will use auth later.
@@ -35,7 +38,12 @@ router.get("/:user/chatters", (req,res) => {
         Object.values(toChatters).map(function(val) {
             allChatters.push(val)
         });
-        res.json(allChatters)
+        //since we're getting all users who sent this current user a message and all users who this current user sent a message to, there is one problem
+        //lets say lebron messages kobe and kobe messages lebron. if username = kobe, then the from pushes kobe and lebron and the to pushes kobe and lebron.
+        //there will always be 2 of each distinct user so we can sort and get rid of duplicates
+        let uniqueChatters = [...new Set(allChatters)];
+        console.log(uniqueChatters)
+        res.json(uniqueChatters)
     })
 });
 
