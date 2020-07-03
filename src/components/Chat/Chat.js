@@ -28,13 +28,16 @@ class Chat extends React.Component{
     let allMessagesAndChatters = {}
     axios.get(`http://localhost:5000/messages/${this.state.username}/chatters`)
     .then(res=>{
-      allMessagesAndChatters.chatters = res.data
+      const chattersWithoutCurrentUser = res.data.filter(chatter => chatter != this.state.username)
+      allMessagesAndChatters.chatters = chattersWithoutCurrentUser
+      this.setState({chatters:chattersWithoutCurrentUser})
     })
     axios.get(`http://localhost:5000/messages/${this.state.username}`)
     .then(res=>{
       allMessagesAndChatters.messages = res.data
       console.log(allMessagesAndChatters)
       this.setState({allMessagesAndChatters:allMessagesAndChatters})
+      this.props.updateConnectedClients(allMessagesAndChatters)
     })
     if(this.props.location.state != null){
       this.setState({currentChatter:this.props.location.state.sendMessageTo, chatters:[this.props.location.state.sendMessageTo]})
@@ -47,7 +50,7 @@ class Chat extends React.Component{
     }
     // this.filterMessages(this.props.connectedClients)
     /*get messages from redux state because if you don't, messages aren't saved. it's either
-    this or you keep asking for the messages from socket.io which is too many api calls.*/
+    this or you keep asking for the messages from socket.io which is too many calls.*/
     this.state.socket.emit('user_connected',this.state.username,this.props.connectedClients)
     this.state.socket.on('private_message', (messagesAndChatters) => {
         this.props.updateConnectedClients(messagesAndChatters)//set connected clients to redux
@@ -86,10 +89,10 @@ class Chat extends React.Component{
     };
     this.setMessage('')
 
-    axios.post('http://localhost:5000/messages/',newMessage)
-    .then(()=>console.log('message posted correctly')).catch( (error) => {
-        console.log(error);
-    });
+    // axios.post('http://localhost:5000/messages/',newMessage)
+    // .then(()=>console.log('message posted correctly')).catch( (error) => {
+    //     console.log(error);
+    // });
   }
   setMessage = (message) =>{
     this.setState({message:message})
@@ -114,7 +117,7 @@ class Chat extends React.Component{
   render(){
       return (
         <div className="outerContainer">
-          <Chatters chatters = {this.state.chatters} changeChatter={this.changeChatter} currentChatter={this.state.currentChatter}/>
+          <Chatters username = {this.state.username} chatters = {this.state.chatters} changeChatter={this.changeChatter} currentChatter={this.state.currentChatter}/>
           <div className="container">
               <InfoBar openModal = {this.openModal} room={this.state.currentChatter}  />
               <Messages messages={this.state.messagesToShow} currentChatter={this.state.currentChatter} currentUser={this.state.username} />

@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // Item Model
-const Message = require('../../models/Message');
+const Message = require('../../models/message');
 const auth = require("../../middleware/auth")
 
 // @route GET api/messages 
@@ -12,24 +12,26 @@ const auth = require("../../middleware/auth")
 router.get("/:user", (req,res) => {
     const username = req.params.user
     console.log(username)
-    Message.find({ $or: [ { from: username }, { to: username } ] })
+    Message.find({ $or: [ { from: username }, { to: username } ] })//if the message is from the current user or to the current user.
     .sort({"created_at":1})
     .then(messages => {
         console.log(messages)
         res.json(messages)
     });
 });
+
+//@desc get all the chatters, so first get all the messages and then get all unique messages so 'from' and 'to' have to be unique. then convert into array and return array as json
 router.get("/:user/chatters", (req,res) => {
     const username = req.params.user
     let allChatters = []
     Message.find({ $or: [ { from: username }, { to: username } ] })
-    .distinct("from").then(fromChatters =>{
+    .distinct("from").then(fromChatters =>{//get all the unique messages from people 
         Object.values(fromChatters).map(function(val) {
             allChatters.push(val)
         });
     })
     Message.find({ $or: [ { from: username }, { to: username } ] })
-    .distinct("to").then(toChatters =>{
+    .distinct("to").then(toChatters =>{//get all unique messages sent to people so all the unique people i sent messages to.
         Object.values(toChatters).map(function(val) {
             allChatters.push(val)
         });
