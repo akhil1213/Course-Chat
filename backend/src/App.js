@@ -11,8 +11,8 @@ import ClassComponent from './components/ClassComponent'
 import Chat from './components/Chat/Chat'
 import {useParams} from 'react-router';
 // import store from './store'
-import {returnErrors} from '../src/redux/actions/errorActions'
-import {loadUser} from '../src/redux/actions/isLogged'
+import {returnErrors} from './redux/actions/errorActions'
+import {loadUser} from './redux/actions/isLogged'
 import axios from 'axios'
 // import React from 'react';
 import store from './store'
