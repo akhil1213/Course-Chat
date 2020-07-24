@@ -18,6 +18,8 @@ import { signOut } from '../redux/actions/isLogged'
 import { withRouter } from 'react-router-dom';
 // import {useSelector, useDispatch } from 'react-redux';
 import { connect , dispatch} from 'react-redux';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -33,46 +35,35 @@ const useStyles = makeStyles(theme => ({
     textDecoration:'none',
     fontSize:20,
     color:'white',
+  },
+  navBar:{
+    backgroundColor:'#E2E2E2',
+    boxShadow:'none'
+  },
+  menuitem:{
+    color:'blue'
   }
 }));
-
-
+const theme = createMuiTheme({
+  overrides: {
+    MuiMenuItem: { // Name of the component ⚛️ / style sheet
+      // text: { // Name of the rule
+        color: 'blue', // Some CSS
+      // },
+    },
+  },
+});
 function MenuAppBar(props) {
       const classes = useStyles();
-      const [auth, setAuth] = React.useState(true);
-      const [anchorEl, setAnchorEl] = React.useState(null);
-      const open = Boolean(anchorEl);
-      const handleChange = event => {
-        setAuth(event.target.checked);
-        if(!event.target.checked){
-          props.signOut();
-        }
-      };
       const signOut = () => {
         props.history.push('/login')
         // localStorage.setItem('state',undefined)
         // localStorage.setItem('token','')
         props.signOut();
       }
-      const handleMenu = event => {
-        setAnchorEl(event.currentTarget);
-      };
-
-      const handleClose = () => {
-        setAnchorEl(null);
-      };
-
       return (
         <div className={classes.root}>
-          {/* <FormGroup>
-            {props.isLogged && (
-              <FormControlLabel
-                control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
-                label={auth ? 'Logout' : 'Login'}
-              />
-            )}
-          </FormGroup> */}
-          <AppBar position="static">
+          <AppBar className={classes.navBar} position="static">
             <Toolbar>
               <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                 <MenuIcon />
@@ -92,30 +83,18 @@ function MenuAppBar(props) {
                     aria-label="account of current user"
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
-                    onClick={handleMenu}
+                    // onClick={handleMenu}
                     color="inherit"
                   >
                     <AccountCircle />
                   </IconButton>
 
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={open}
-                    onClose={handleClose}
-                  >
+                  <Menu>
+                  <MuiThemeProvider theme={theme}>
                     {props.isLogged && <MenuItem onClick={signOut}><Link to ="/signup">Log Out</Link></MenuItem>}
-                    <MenuItem onClick={handleClose}><Link to ="/signup">Sign up</Link></MenuItem>
-                    <MenuItem onClick={handleClose}><Link to ="/profile" >User Profile</Link></MenuItem>
+                    <MenuItem classes={{ root: 'menu-item', selected: 'selected' }}><Link to ="/signup">Sign up</Link></MenuItem>
+                    <MenuItem style={{backgroundColor: 'red', color: 'white'}} ><Link to ="/profile" >User Profile</Link></MenuItem>
+                  </MuiThemeProvider>
                   </Menu>
                 </div>
               {/* )} */}
