@@ -6,38 +6,57 @@ import { signIn } from '../redux/actions/isLogged'
 import { connect, dispatch} from 'react-redux';
 import { logIn } from '../redux/reducers/isLogged';
 import {register} from '../redux/actions/isLogged'
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles(theme => ({
+  container:{
+    display:'flex',
+    flexDirection:'column',
+    alignItems:'center',
+  },
+  width:{
+    width:'30%'
+  },
+  // textfield:{
+  //   width:'150%',
+  // },
+  navLink:{
+    width:'100%'
+  }
+})
+)
 //you have to install redux and install react-redux
 //i kind of used this website https://serverless-stack.com/chapters/create-a-login-page.html
 
 function Signup(props) {
-    const [username, setUsername] = useState('');
-    const [fullname, setFullname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [college, setCollege] = useState('');
-    const [fullNameError, setFullNameError] = useState('');
-    const [usernameError, setUsernameError] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [collegeError, setCollegeError] = useState('');
-    const [errormessage,setErrorMessage] = useState(false);
-    const [isLogged,setIsLogged] = useState(false);
-    const dispatch = useDispatch();
-    function handleClick(e){
-      // console.log(props.state.isLoading)
-      // console.log(props.state.error)
-      if(!validateForm()){
-          e.preventDefault();
-      }
-      else{
-          e.preventDefault()
-          console.log(props.errorMsg)
-          props.register(props.history,fullname,email,username,password,college);//signup
-      }
-          //send user to mongodb using axios. 
-      /*if validatedform is false so its not validated then you prevent the 
-      default action from happening which is going to user profile page.*/
+  const classes = useStyles();
+  const [username, setUsername] = useState('');
+  const [fullname, setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [college, setCollege] = useState('');
+  const [fullNameError, setFullNameError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [collegeError, setCollegeError] = useState('');
+  const [errormessage,setErrorMessage] = useState(false);
+  const [isLogged,setIsLogged] = useState(false);
+  const dispatch = useDispatch();
+  function handleClick(e){
+    // console.log(props.state.isLoading)
+    // console.log(props.state.error)
+    if(!validateForm()){
+        e.preventDefault();
     }
+    else{
+        e.preventDefault()
+        console.log(props.errorMsg)
+        props.register(props.history,fullname,email,username,password,college);//signup
+    }
+        //send user to mongodb using axios. 
+    /*if validatedform is false so its not validated then you prevent the 
+    default action from happening which is going to user profile page.*/
+  }
   function validateForm(){
     setErrorMessage(true);
       if(fullname.length === 0)
@@ -87,26 +106,6 @@ function Signup(props) {
   function updateCollege(event) {
     setCollege(event.target.value);
   }
-  // updateUsername = (event) => {
-  //   this.setState({username: event.target.value});
-  //   setUsername(event.target.value);
-  // }
-  // updateFName = (event) => {
-  //   //this.setState({fullname: event.target.value});
-  //   setFullname(event.target.value);
-  // }
-  // updateEmail = (event) => {
-  //   //this.setState({email: event.target.value});
-  //   setEmail(event.target.value);
-  // }
-  // updatePassword = (event) => {
-  //   //this.setState({password: event.target.value});
-  //   setPassword(event.target.value);
-  // }
-  // updateCollege = (event) => {
-  //   //this.setState({college: event.target.value});
-  //   setCollege(event.target.value);
-  // }
   function validateEmail(){
     //let email = this.state.email;
     const pattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
@@ -114,71 +113,80 @@ function Signup(props) {
     return pattern.test(email);
   }
       return (
-        <div id = "signup" className="App">
-          <Container maxWidth="sm">
-            <Box className='Box' border={1}borderColor="primary.main">
-                <form id="formforsignup">
-                  <p>{props.errorMsg}</p>
-                  <div className="spaceForInput">
-                    <TextField placeholder="Full Name" name="fullname"
-                        error={fullNameError.length > 0}
-                        label="Full Name"
-                        id="standard-error-helper-text"
-                        helperText={fullNameError}
-                        type="text" 
-                        onChange={updateFName}/>
-                  </div>
-                  <div className="spaceForInput">
-                    <TextField label="email" placeholder="E-mail" name="email"
-                      type="email"
-                      onChange={updateEmail}/>
-                      {emailError === 'email is empty' && <div id ="errorlabel">{emailError}</div>}
-                      {emailError === 'Invalid email format' && <div id ="errorlabel">Invalid Email Format!</div>}
-                  </div>
-                  <div className="spaceForInput">
-                    <Input
-                      placeholder="Username"
-                      name="username"
-                      type="text"
-                      onChange={updateUsername}
-                    />
-                    {usernameError.length > 0 && <div id ="errorlabel">{usernameError}</div>}
-                  </div>
-                  <div className="spaceForInput">
-                    <Input
-                      placeholder="password"
-                      name="password"
-                      type="password"
-                      onChange={updatePassword}
-                    />
-                    {passwordError.length > 0 && <div id ="errorlabel">{passwordError}</div>}
-                  </div>
-                  <TextField
-                      id="standard-select-currency"
-                      select
-                      label="Select"
-                      name="college"
-                      onChange={updateCollege}
-                      helperText="Please select your College"
-                  >
-                    <MenuItem value="Queens College">Queens</MenuItem>
-                    <MenuItem value="Hunter College">Hunter</MenuItem>
-                    <MenuItem value="Baruch">Baruch</MenuItem>
-                  </TextField>
-                  {collegeError.length > 0 && <div id ="errorlabel">{collegeError}</div>}
-                  <NavLink to={{
-                        pathname: '/',
-                        // state:{
-                        //     username:username,
-                        //     fullname:fullname,
-                        //     email:email,
-                        //     password:password,
-                        //     college:college
-                        // },
-                      }} onClick={handleClick} activeStyle={{ color: 'black' }} className="navLink">Submit</NavLink>
-                </form>
-            </Box>
-          </Container>
+        <div className={classes.container}>
+          <div className={classes.width}>
+            <p>{props.errorMsg}</p>
+            <div className="spaceForInput">
+              <TextField placeholder="full name" name="fullname"
+                  className={classes.textfield}
+                  error={fullNameError.length > 0}
+                  label="Full Name*"
+                  id="standard-error-helper-text"
+                  helperText={fullNameError}
+                  type="text" 
+                  variant="outlined"
+                  fullWidth
+                  onChange={updateFName}/>
+            </div>
+            <div className="spaceForInput">
+              <TextField label="email"
+                name="email"
+                className={classes.textfield}
+                type="email"
+                placeholder="E-mail"
+                variant="outlined"
+                fullWidth
+                onChange={updateEmail}/>
+                {emailError === 'email is empty' && <div id ="errorlabel">{emailError}</div>}
+                {emailError === 'Invalid email format' && <div id ="errorlabel">Invalid Email Format!</div>}
+            </div>
+            <div className="spaceForInput">
+              <TextField
+                className={classes.textfield}
+                placeholder="Enter Username*"
+                name="username"
+                type="text"
+                variant="outlined"
+                fullWidth
+                onChange={updateUsername}
+              />
+              {usernameError.length > 0 && <div id ="errorlabel">{usernameError}</div>}
+            </div>
+            <div className="spaceForInput">
+              <TextField
+                className={classes.textfield}
+                placeholder="Enter Password*"
+                name="password"
+                type="password"
+                variant="outlined"
+                fullWidth
+                onChange={updatePassword}
+              />
+              {passwordError.length > 0 && <div id ="errorlabel">{passwordError}</div>}
+            </div>
+            <TextField
+                id="standard-select-currency"
+                select
+                label="Select"
+                name="college"
+                onChange={updateCollege}
+                fullWidth
+                helperText="Please select your College"
+                
+            >
+              <MenuItem value="Queens College">Queens</MenuItem>
+              <MenuItem value="Hunter College">Hunter</MenuItem>
+              <MenuItem value="Baruch">Baruch</MenuItem>
+            </TextField>
+            {collegeError.length > 0 && <div id ="errorlabel">{collegeError}</div>}
+            <NavLink to={{
+                  pathname: '/',
+                }} onClick={handleClick} activeStyle={{ color: 'black' }} className="navLink">Submit</NavLink>
+            {/* </Box> */}
+
+          </div>
+      {/* <Box className='Box' border={1}borderColor="primary.main"> */}
+            
         </div>
       );
     }

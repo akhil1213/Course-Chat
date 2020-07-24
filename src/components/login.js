@@ -10,7 +10,26 @@ import {login} from '../redux/actions/isLogged'
 //you have to install redux and install react-redux
 //i kind of used this website https://serverless-stack.com/chapters/create-a-login-page.html
 import axios from 'axios'
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles(theme => ({
+  container:{
+    display:'flex',
+    flexDirection:'column',
+    alignItems:'center',
+  },
+  width:{
+    width:'30%'
+  },
+  // textfield:{
+  //   width:'150%',
+  // },
+  navLink:{
+    width:'100%'
+  }
+})
+)
 function Login(props) {
+  const classes = useStyles()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errormessage,setErrorMessage] = useState(false);
@@ -68,44 +87,45 @@ function validatePassword(){
   return false;
 }
     return (
-      <div id = "signup" className="App">
-        <Container maxWidth="sm">
-          <Box className='Box' border={1}borderColor="primary.main">
-              <form id="formforsignup">
-                <p>{props.errorMsg}</p>
-                <div className="spaceForInput">
-                  <Input
-                    placeholder="Username"
-                    name="username"
-                    type="text"
-                    onChange={updateUsername}
-                  />
-                  {usernameError.length > 0 && <div id ="errorlabel">{usernameError}</div>}
-                </div>
-                <div className="spaceForInput">
-                  <Input
-                    placeholder="password"
-                    name="password"
-                    type="password"
-                    onChange={updatePassword}
-                    onKeyPress={event => event.key === 'Enter' ? handleClick(event) : null}
-                  />
-                  {passwordError.length > 0 && <div id ="errorlabel">{passwordError}</div>}
-                </div>
-                <NavLink to={{
-                      pathname: '/',
-                      state:{
-                          // username:username,
-                          // // fullname:fullname,
-                          // // email:email,
-                          // password:password,
-                          // // college:college
-                      },
-                    }} onClick={handleClick} activeStyle={{ color: 'black' }} className="navLink">Login</NavLink>
-              </form>
-          </Box>
-        </Container>
+      <div className={classes.container}>
+        <div className={classes.width}>
+          <p>{props.errorMsg}</p>
+          <div className="spaceForInput">
+            <TextField
+              placeholder="Enter username*"
+              name="username"
+              type="text"
+              variant="outlined"
+              fullWidth
+              onChange={updateUsername}
+            />
+            {usernameError.length > 0 && <div id ="errorlabel">{usernameError}</div>}
+          </div>
+          <div className="spaceForInput">
+            <TextField
+              placeholder="Enter Password*"
+              name="password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              onChange={updatePassword}
+              onKeyPress={event => event.key === 'Enter' ? handleClick(event) : null}
+            />
+            {passwordError.length > 0 && <div id ="errorlabel">{passwordError}</div>}
+          </div>
+          <NavLink to={{
+                pathname: '/',
+                state:{
+                    // username:username,
+                    // // fullname:fullname,
+                    // // email:email,
+                    // password:password,
+                    // // college:college
+                },
+              }} onClick={handleClick} activeStyle={{ color: 'black' }} className="navLink">Login</NavLink>
+        </div>
       </div>
+      
     );
   }
 const mapStateToProps = (state) => (

@@ -6,7 +6,7 @@ nav{
   background:rgb(73,79,80);
 }
 body{
-  background:#e2e2e2;
+  background:white;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 .nav-links{
@@ -26,7 +26,6 @@ body{
   color: white;
   padding: .5em;
   text-decoration: none;
-  width:180px;
   text-align:center;
   margin-top:10px;
 }
@@ -98,6 +97,9 @@ body{
   text-transform: capitalize;
   color:gray;
   height:5px;
+}
+.underline{
+  border-bottom:4px
 }
 #college{
 }
