@@ -11,6 +11,7 @@ import Chatters from '../Chatters/Chatters'
 import { connect } from 'react-redux';
 import axios from 'axios'
 import chatters from "../../redux/reducers/chatters";
+import {setConfig} from '../../redux/actions/isLogged.js'
 class Chat extends React.Component{
   constructor(props){
     super(props);
@@ -27,21 +28,22 @@ class Chat extends React.Component{
   }
   componentWillMount(){
     console.log('mounted again')
-    let allMessagesAndChatters = {}   
-    if (this.props.allMessages.length !== 0){
+    let allMessagesAndChatters = {}
+    const config = setConfig()   
+    if (this.props.allMessages.length !== 0 && this.props.allChatters.length != 0){
       //this is so we only call to the database once, and redux has all the data stored from the db. 
       this.setState({allMessages:this.props.allMessages})
       this.setState({chatters:this.props.allChatters})
       // don't even need state, we can use this props allMessages instead of using the state. maybe will change that later to clean it up
     }else{
-      axios.get(`http://localhost:5000/messages/${this.state.username}/chatters`)
+      axios.get(`http://localhost:5000/messages/${this.state.username}/chatters`,config)
       .then(res=>{
         console.log(res.data)
         const allChattersWithoutCurrentUser = res.data.filter(chatter => chatter != this.state.username)
         allMessagesAndChatters.chatters = allChattersWithoutCurrentUser
         this.setState({chatters:allChattersWithoutCurrentUser})
       })
-      axios.get(`http://localhost:5000/messages/${this.state.username}`)
+      axios.get(`http://localhost:5000/messages/${this.state.username}`,config)
       .then(res=>{
         allMessagesAndChatters.messages = res.data
         this.setState({allMessages:allMessagesAndChatters.messages})
@@ -68,17 +70,6 @@ class Chat extends React.Component{
     this.setState({chatters:this.props.allChatters})
     this.filterMessages(this.props.allMessages, this.state.currentChatter)
     
-    // console.log(this.props.connectedClients)
-    //dont really need below code because now we have a database.
-    // if(this.props.connectedClients.socketID != ""){
-    //   this.setState({allMessages:this.props.connectedClients})
-    //   this.setState({chatters:this.props.connectedClients.chatters})
-    //   this.filterMessages(this.props.connectedClients,this.state.currentChatter)
-    // }
-
-    // this.filterMessages(this.props.connectedClients)
-    /*get messages from redux state because if you don't, messages aren't saved. it's either
-    this or you keep asking for the messages from socket.io which is too many calls.*/
     this.state.socket.emit('user_connected',this.state.username)
     this.state.socket.on('private_message', (message,from) => {
         var message = {
@@ -137,7 +128,7 @@ class Chat extends React.Component{
     this.setMessage('')
 
     //save message to database, but i have it commented bcause too many messages will cause overflow.
-    // axios.post('http://localhost:5000/messages/',newMessage)
+    // axios.post('http://localhost:5000/messages/',config,newMessage)
     // .then(()=>console.log('message posted correctly')).catch( (error) => {
     //     console.log(error);
     // });

@@ -16,18 +16,16 @@ body{
   align-items: center;
   list-style:none;
 }
-.spaceForInput{
-  margin-bottom:20px;
-}
 .navLink{
   display:block;
   background-color: rgb(20, 220, 97);  
-  border-radius: 5px;
+  border-radius: 10px;
   color: white;
   padding: .5em;
   text-decoration: none;
   text-align:center;
   margin-top:10px;
+  height:25px
 }
 .navLink:hover{
   background-color: rgb(21, 109, 49);
@@ -100,8 +98,6 @@ body{
 }
 .underline{
   border-bottom:4px
-}
-#college{
 }
 #listItems{
   margin-left:20px;

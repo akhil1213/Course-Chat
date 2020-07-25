@@ -19,7 +19,7 @@ import store from './store'
 import {dispatch, connect} from 'react-redux'
 class App extends React.Component {
   componentDidMount(){
-    this.props.loadUser()
+    // this.props.loadUser()
   }
   render(){
     return ( 

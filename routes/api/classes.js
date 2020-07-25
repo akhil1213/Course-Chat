@@ -14,12 +14,14 @@ router.get("/", (req,res) => {
     Class.find()
         .then(items => res.json(items));
 });
-router.get("/:username",  (req,res) => {
+router.get("/:username", auth, (req,res) => {
     console.log(req.params.username)
     Class.find({ username:req.params.username})
         .then(items => res.json(items));
 });
-router.get("/course/:id", (req,res) => {
+//get classmates
+//get users in all courses taken by a certain user, concatenate the users, and these users are classmates
+router.get("/course/:id",auth,(req,res) => {
     // console.log(req.params.username)
     Class.find({ _id:req.params.id})
         .then(classInfo => {

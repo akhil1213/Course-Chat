@@ -2,6 +2,7 @@ import React , {useState,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     color:'#2daebd',
     fontWeight:'bolder',
+    textDecoration:'none',
     fontSize:30,
     marginLeft:theme.spacing(5)
   },
@@ -60,12 +62,11 @@ const useStyles = makeStyles(theme => ({
     },
   },
   underline:{
-    border:2,
-    padding:4,
-    borderBottomWidth:3,
-    borderBottomColor:'purple',
-    borderBottomStyle:'',
-    backgroundColor:'black'
+    textDecoration:'underline',
+    textDecorationColor:'#35578f'
+  },
+  menuItems:{
+    marginRight:theme.spacing(9)
   }
 }));
 
@@ -74,16 +75,21 @@ function MenuAppBar(props) {
       const [underline,setUnderline] = useState('login')
       const signOut = () => {
         props.history.push('/login')
-        // localStorage.setItem('state',undefined)
-        // localStorage.setItem('token','')
+        localStorage.setItem('state',undefined)
+        localStorage.setItem('token','')
         props.signOut();
       }
       useEffect(()=>{
-        //to set signup or login to be underlined on nav bar if user changes the uri instead of clicking links.
+        // const initialUnderline = props.isLogged ? 'Feed' : 'login'
+        // to set signup or login to be underlined on nav bar if user changes the uri instead of clicking links.
         let currentPath = props.history.location.pathname
         currentPath = currentPath.substring(1)
-        if(currentPath == 'signup' || currentPath == 'login' ) setUnderline(currentPath)
-      },[])
+        console.log(currentPath=='')
+        if(currentPath==''){
+          setUnderline('Feed')
+        }
+        setUnderline(currentPath)
+      })
       return (
         <div className={classes.root}>
           <AppBar className={classes.navBar} position="static">
@@ -91,11 +97,15 @@ function MenuAppBar(props) {
               <Typography variant="h6" className={classes.title}>
                 Course-Chat
               </Typography>
+              <div className={classes.menuItems}>
                 {props.isLogged===false && (<Link onClick={()=>setUnderline('signup')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='signup'})} to ="/signup">Sign-Up</Link>)}
                 {props.isLogged===false && (<Link onClick={()=>setUnderline('login')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='login'})} to ="/login">Login</Link>)}
+                {props.isLogged && <Link onClick={()=>setUnderline('Feed')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='Feed'})} to ="/">Feed</Link>}
                 {props.isLogged && <Link onClick={()=>setUnderline('profile')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='profile'})} to ="/profile">Profile</Link>}
                 {props.isLogged && <Link onClick={()=>setUnderline('chat')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='chat'})} to ="/chat">Messages</Link>} 
-                {props.isLogged && <Link onClick={()=>setUnderline('login')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='login'})} to ="/login" onClick={signOut}>LogOut</Link>}
+                {props.isLogged && <Link onClick={()=>setUnderline('login')} className = {clsx({[classes.link]:true,})} to ="/login" onClick={signOut}>LogOut</Link>}
+              </div>
+                
 
                 {/* <IconButton
                   aria-label="account of current user"

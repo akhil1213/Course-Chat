@@ -1,6 +1,6 @@
 import {GET_CLASSES_FROM_DB,SET_CLASS,GET_QUERIED_CLASSES_FROM_DB} from './types'
 import axios from 'axios';
-
+import {setConfig} from './isLogged'
 function sortAndGetRidOfDuplicates(allStudentsInAllClasses){
     allStudentsInAllClasses.sort(function(a,b){
         var usernameA = a.username.toUpperCase(); // ignore upper and lowercase
@@ -28,17 +28,22 @@ function sortAndGetRidOfDuplicates(allStudentsInAllClasses){
 }
 
 export const getClassesForUser = (dispatch,username) =>{
-    axios.get(`http://www.localhost:5000/${username}`)
+    const config = setConfig()
+    console.log(config)
+    axios.get(`http://www.localhost:5000/${username}`,config)
         .then( async (response) => {
+                console.log(response)
                 dispatch({
                     type:GET_CLASSES_FROM_DB,
                     payload:response.data
                 });
                 var classes = response.data
                 var waitForAsync = []
+                //first get classes then for each class get all students and concatenate all students
                 for(var i = 0; i < classes.length; i++){
-                    waitForAsync.push(axios.get('http://www.localhost:5000/course/' + classes[i]._id)//queries all students taking this specific course. need to change the name of route later.
+                    waitForAsync.push(axios.get('http://www.localhost:5000/course/' + classes[i]._id,config)//queries all students taking this specific course. need to change the name of route later.
                     .then( (studentsResponse) => {
+                        console.log(studentsResponse)
                         return studentsResponse.data
                     })
                     .catch(function (error) {
@@ -60,7 +65,8 @@ export const getClassesForUser = (dispatch,username) =>{
             });
 }
 export const getStudentsForClass = (dispatch,classInfo,id) =>{
-    axios.get('http://www.localhost:5000/course/' + id)
+    const config = setConfig()
+    axios.get(`http://www.localhost:5000/course/${id}`,config)
     .then( (studentsResponse) => {
         console.log(studentsResponse.data);
         dispatch({

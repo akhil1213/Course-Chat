@@ -48,7 +48,7 @@ const persistedState = loadFromLocalStorage()
 //     reducer, /* preloadedState, */
 //  +  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 //   );
-const store = createStore(rootReducer,persistedState,applyMiddleware(...middleware));
+const store = createStore(rootReducer,persistedState,applyMiddleware(...middleware)+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 store.subscribe(() => saveToLocalStorage(store.getState()))
 export default store
 

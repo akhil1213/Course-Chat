@@ -1,6 +1,6 @@
 import React , { useState } from 'react';
 import {NavLink, Link} from 'react-router-dom';
-import {Box,Container, MenuItem,Select, Input, InputLabel, TextField} from '@material-ui/core'
+import {Typography, Box,Container, MenuItem,Select, Input, InputLabel, TextField, Button} from '@material-ui/core'
 import {useSelector, useDispatch } from 'react-redux';
 // import { signIn } from '../actions/isLogged'
 import { connect, dispatch} from 'react-redux';
@@ -20,12 +20,28 @@ const useStyles = makeStyles(theme => ({
   width:{
     width:'30%'
   },
-  // textfield:{
-  //   width:'150%',
-  // },
-  navLink:{
-    width:'100%'
-  }
+  button:{
+    background: '#35578f',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px #33435e',
+    color: 'white',
+    marginTop:30,
+    height:'50px',
+    textDecoration:'none',
+    display:'block',
+    textAlign:'center',
+    "&:hover": {
+      //you want this to be the same as the backgroundColor above
+      background: '#33435e'
+    }
+  },
+  textfield:{
+    marginTop:20
+  },
+  header:{
+    marginTop:60
+  },
 })
 )
 function Login(props) {
@@ -41,7 +57,7 @@ function Login(props) {
     if(!validateForm())
         e.preventDefault();
     else{
-      e.preventDefault()
+        e.preventDefault()
         props.login(props.history,username,password);//signup
         console.log(props.errorMsg)
     }
@@ -88,15 +104,19 @@ function validatePassword(){
 }
     return (
       <div className={classes.container}>
+        <Typography className={classes.header} variant = "h4">
+          Welcome back!
+        </Typography>
         <div className={classes.width}>
           <p>{props.errorMsg}</p>
           <div className="spaceForInput">
             <TextField
-              placeholder="Enter username*"
+              placeholder="Enter Username*"
               name="username"
               type="text"
               variant="outlined"
               fullWidth
+              className={classes.textfield}
               onChange={updateUsername}
             />
             {usernameError.length > 0 && <div id ="errorlabel">{usernameError}</div>}
@@ -109,20 +129,18 @@ function validatePassword(){
               variant="outlined"
               fullWidth
               onChange={updatePassword}
+              className={classes.textfield}
               onKeyPress={event => event.key === 'Enter' ? handleClick(event) : null}
             />
             {passwordError.length > 0 && <div id ="errorlabel">{passwordError}</div>}
           </div>
           <NavLink to={{
                 pathname: '/',
-                state:{
-                    // username:username,
-                    // // fullname:fullname,
-                    // // email:email,
-                    // password:password,
-                    // // college:college
-                },
-              }} onClick={handleClick} activeStyle={{ color: 'black' }} className="navLink">Login</NavLink>
+              }} style={{textDecoration:'none'}} onClick={handleClick}>
+              <Button fullWidth className={classes.button}>
+                Login
+              </Button>
+          </NavLink>
         </div>
       </div>
       

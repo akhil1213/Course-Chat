@@ -1,6 +1,6 @@
 import React , { useState } from 'react';
 import {NavLink, Link} from 'react-router-dom';
-import {Box,Container, MenuItem,Select, Input, InputLabel, TextField} from '@material-ui/core'
+import {Box,Container, MenuItem,Select, Input, InputLabel, TextField, Button, Typography} from '@material-ui/core'
 import {useSelector, useDispatch } from 'react-redux';
 import { signIn } from '../redux/actions/isLogged'
 import { connect, dispatch} from 'react-redux';
@@ -19,8 +19,30 @@ const useStyles = makeStyles(theme => ({
   // textfield:{
   //   width:'150%',
   // },
-  navLink:{
-    width:'100%'
+  button:{
+    background: '#35578f',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px #33435e',
+    color: 'white',
+    marginTop:10,
+    height:'50px',
+    textDecoration:'none',
+    display:'block',
+    textAlign:'center',
+    "&:hover": {
+      //you want this to be the same as the backgroundColor above
+      background: '#33435e'
+    }
+  },
+  buttonText:{
+    textDecoration:'none'
+  },
+  textfield:{
+    marginTop:20
+  },
+  header:{
+    marginTop:60
   }
 })
 )
@@ -114,56 +136,51 @@ function Signup(props) {
   }
       return (
         <div className={classes.container}>
+          <Typography className={classes.header} variant = "h4">
+            Make the most of your Academic life
+          </Typography>
           <div className={classes.width}>
             <p>{props.errorMsg}</p>
-            <div className="spaceForInput">
-              <TextField placeholder="full name" name="fullname"
-                  className={classes.textfield}
-                  error={fullNameError.length > 0}
-                  label="Full Name*"
-                  id="standard-error-helper-text"
-                  helperText={fullNameError}
-                  type="text" 
-                  variant="outlined"
-                  fullWidth
-                  onChange={updateFName}/>
-            </div>
-            <div className="spaceForInput">
-              <TextField label="email"
-                name="email"
-                className={classes.textfield}
-                type="email"
-                placeholder="E-mail"
-                variant="outlined"
-                fullWidth
-                onChange={updateEmail}/>
-                {emailError === 'email is empty' && <div id ="errorlabel">{emailError}</div>}
-                {emailError === 'Invalid email format' && <div id ="errorlabel">Invalid Email Format!</div>}
-            </div>
-            <div className="spaceForInput">
-              <TextField
-                className={classes.textfield}
-                placeholder="Enter Username*"
-                name="username"
-                type="text"
-                variant="outlined"
-                fullWidth
-                onChange={updateUsername}
-              />
-              {usernameError.length > 0 && <div id ="errorlabel">{usernameError}</div>}
-            </div>
-            <div className="spaceForInput">
-              <TextField
-                className={classes.textfield}
-                placeholder="Enter Password*"
-                name="password"
-                type="password"
-                variant="outlined"
-                fullWidth
-                onChange={updatePassword}
-              />
-              {passwordError.length > 0 && <div id ="errorlabel">{passwordError}</div>}
-            </div>
+            <TextField placeholder="full name" name="fullname"
+              className={classes.textfield}
+              error={fullNameError.length > 0}
+              label="Full Name*"
+              id="standard-error-helper-text"
+              helperText={fullNameError}
+              type="text" 
+              variant="outlined"
+              fullWidth
+              onChange={updateFName}/>
+            <TextField label="email"
+              name="email"
+              className={classes.textfield}
+              type="email"
+              placeholder="E-mail"
+              variant="outlined"
+              fullWidth
+              onChange={updateEmail}/>
+              {emailError === 'email is empty' && <div id ="errorlabel">{emailError}</div>}
+              {emailError === 'Invalid email format' && <div id ="errorlabel">Invalid Email Format!</div>}
+            <TextField
+              className={classes.textfield}
+              placeholder="Enter Username*"
+              name="username"
+              type="text"
+              variant="outlined"
+              fullWidth
+              onChange={updateUsername}
+            />
+            {usernameError.length > 0 && <div id ="errorlabel">{usernameError}</div>}
+            <TextField
+              className={classes.textfield}
+              placeholder="Enter Password*"
+              name="password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              onChange={updatePassword}
+            />
+            {passwordError.length > 0 && <div id ="errorlabel">{passwordError}</div>}
             <TextField
                 id="standard-select-currency"
                 select
@@ -172,7 +189,6 @@ function Signup(props) {
                 onChange={updateCollege}
                 fullWidth
                 helperText="Please select your College"
-                
             >
               <MenuItem value="Queens College">Queens</MenuItem>
               <MenuItem value="Hunter College">Hunter</MenuItem>
@@ -180,12 +196,14 @@ function Signup(props) {
             </TextField>
             {collegeError.length > 0 && <div id ="errorlabel">{collegeError}</div>}
             <NavLink to={{
-                  pathname: '/',
-                }} onClick={handleClick} activeStyle={{ color: 'black' }} className="navLink">Submit</NavLink>
-            {/* </Box> */}
+                pathname: '/',
+              }} style={{textDecoration:'none'}} onClick={handleClick}>
+              <Button fullWidth className={classes.button}>
+                Signup
+              </Button>
+            </NavLink>
 
           </div>
-      {/* <Box className='Box' border={1}borderColor="primary.main"> */}
             
         </div>
       );

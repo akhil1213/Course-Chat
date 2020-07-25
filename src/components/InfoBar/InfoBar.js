@@ -16,7 +16,6 @@ const InfoBar = ({ room, openModal }) => (
       <Button onClick = {() => openModal()}>
         <SendIcon/>
       </Button>
-      <a href="/"><img src={closeIcon} alt="close icon" /></a>
     </div>
   </div>
 );

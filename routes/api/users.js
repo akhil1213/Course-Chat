@@ -15,7 +15,6 @@ const auth = require("../../middleware/auth")
 router.post(
     "/signup",
     async (req, res) => {
-
         const {
             fullName,
             username,
@@ -115,7 +114,7 @@ router.post(
                         (err, token) => {
                             console.log(err)
                             if (err) {
-                                console.log(err)
+                                console.log('err')
                             }else{
                                 console.log("ayyay")
                             }
@@ -135,11 +134,12 @@ router.post(
         }
 );
 router.get('/get/user',auth,(req,res)=>{
+    console.log(req)
     User.find({_id: req.user.id})
         .select('-password')
         .then(user => {
-            res.json(user)
-            console.log(user)
+            console.log(user[0])
+            res.json(user[0])
         })
         .catch(err => {
             console.log(err)

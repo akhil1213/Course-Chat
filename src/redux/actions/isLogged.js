@@ -108,14 +108,11 @@ export const loginFailed = (dispatch,err) => {
     console.log(err.response.data)
 }
 export const loadUser = (dispatch,history) => {
-    // User loading
-    // dispatch({type: "USER_LOADING"})
-    //get token from local storage
     const config = setConfig()
     axios.get("http://localhost:5000/get/user",config)
         .then(res => {
-            console.log(res.data[0].username)
-            dispatch({type: "USER_LOADED", payload:res.data[0]})
+            console.log(res.data)
+            dispatch({type: "USER_LOADED", payload:res.data})
             history.push('/')
         }).catch(err => {
             console.log(err)
@@ -125,13 +122,14 @@ export const loadUser = (dispatch,history) => {
 }
 export const setConfig = () =>{
     const token = localStorage.getItem('token')
-    //Headers
+    console.log(token)
     const config = {
         headers:{
             "Content-type":"application/json"
         }
     }
     if (token){
+        console.log(token)
         config.headers['x-auth-token'] = token;
     }
     return config
