@@ -6,7 +6,7 @@ import './Chatters.css';
 class Chatters extends React.Component {
     state = {  }
     render() {
-        const {chatters,currentChatter} = this.props
+        const {chatters,currentChatter,notification} = this.props
         return (
             <div className="chattersList">
                 {chatters.map((classmate) => {
@@ -16,7 +16,8 @@ class Chatters extends React.Component {
                         button
                         onClick={() => this.props.changeChatter(classmate)}
                     >
-                    <p>{classmate}</p>
+                    <p>{classmate}</p><br></br>
+                    {notification.user === classmate ? <p>{notification.message}</p> : null}
                     </ListItem>
                 )
                 })}

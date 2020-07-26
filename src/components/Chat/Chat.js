@@ -23,7 +23,8 @@ class Chat extends React.Component{
         messagesToShow:[],//messages get filtered 
         socket:io('http://localhost:4000/'),
         message:'',
-        modalOpened:false
+        modalOpened:false,
+        notification:{}
     };
   }
   componentWillMount(){
@@ -72,6 +73,13 @@ class Chat extends React.Component{
     
     this.state.socket.emit('user_connected',this.state.username)
     this.state.socket.on('private_message', (message,from) => {
+      console.log('message received!')
+        if(from!==this.state.currentChatter){
+          this.setState({notification:{message,user:from}})
+        }else{
+          this.setState({notification:{}})
+        }
+        if(this.state.chatters.indexOf(from) === -1) this.setState({chatters:[...this.state.chatters,from]})
         var message = {
           from:from,
           to:this.state.username,
@@ -116,18 +124,27 @@ class Chat extends React.Component{
     event.preventDefault();
     if(this.state.message != '') {
       this.state.socket.emit('sendPrivateMessage', this.state.message,this.state.username,this.state.currentChatter, () => this.setMessage(''));
+    
+      const today = new Date();
+      let minutes = today.getMinutes()
+      if(minutes/10<1) {
+        minutes = "0"+minutes
+      }
+      const time = today.getHours()%12 + ":" + minutes;
+      const newMessage = {
+        message:this.state.message,
+        from: this.state.username,
+        to:this.state.currentChatter,
+        created_at:time
+      };
+      this.setState({messagesToShow:[...this.state.messagesToShow,newMessage]})
+      this.props.addMessage(newMessage)
+      this.setState({allMessages:[...this.state.allMessages,newMessage]})
+      // this.filterMessages(this.state.allMessages,this.state.currentChatter)
+      this.setMessage('')
     }
-    const newMessage = {
-      message:this.state.message,
-      from: this.state.username,
-      to:this.state.currentChatter
-    };
-    this.props.addMessage(newMessage)
-    this.setState({allMessages:[...this.state.allMessages,newMessage]})
-    this.filterMessages(this.state.allMessages,this.state.currentChatter)
-    this.setMessage('')
 
-    //save message to database, but i have it commented bcause too many messages will cause overflow.
+    //save message to database, but i have it commented bcause too many messages will stop saving eventually (free atlas).
     // axios.post('http://localhost:5000/messages/',config,newMessage)
     // .then(()=>console.log('message posted correctly')).catch( (error) => {
     //     console.log(error);
@@ -145,6 +162,7 @@ class Chat extends React.Component{
     this.changeChatter(chatterUsername)
   }
   changeChatter = (classmate) =>{
+    if(this.state.notification.user === classmate) this.setState({notification:{}})
     this.setState({currentChatter:classmate})//if messages are sent now, it will be sent to the current chatter.
     this.filterMessages(this.state.allMessages,classmate)//you want to now show messages for the new focused current new chatter.
   }
@@ -157,7 +175,7 @@ class Chat extends React.Component{
   render(){
       return (
         <div className="outerContainer">
-          <Chatters username = {this.state.username} chatters = {this.state.chatters} changeChatter={this.changeChatter} currentChatter={this.state.currentChatter}/>
+          <Chatters notification={this.state.notification} username = {this.state.username} chatters = {this.state.chatters} changeChatter={this.changeChatter} currentChatter={this.state.currentChatter}/>
           <div className="container">
               <InfoBar openModal = {this.openModal} room={this.state.currentChatter}  />
               <Messages messages={this.state.messagesToShow} currentChatter={this.state.currentChatter} currentUser={this.state.username} />

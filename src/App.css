@@ -110,3 +110,9 @@ body{
 .unfocused:hover{
   background-color:#5c6a6b
 }
+#navbar{
+  color:'purple' !important;
+  background-color:'yellow' !important;
+  position:'sticky';
+  top:0;
+}

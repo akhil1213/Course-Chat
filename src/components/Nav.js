@@ -8,9 +8,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from 'react-router-dom';
 import {Signup} from './Signup';
-import {UserProfile} from './UserProfile';
+import {UserProfile} from './UserProfile/UserProfile';
 import clsx from 'clsx';
-
+import ChatIcon from '@material-ui/icons/Chat';
 import { signOut } from '../redux/actions/isLogged'
 import { withRouter } from 'react-router-dom';
 // import {useSelector, useDispatch } from 'react-redux';
@@ -20,10 +20,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    // flexGrow: 1,
-    color:'#2daebd'
-  },
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up("xs")]: {
@@ -53,7 +49,9 @@ const useStyles = makeStyles(theme => ({
   },
   navBar:{
     backgroundColor:'white',
-    boxShadow:'none'
+    boxShadow:'none',
+    position:'sticky',
+    top:0
   },
   toolbar: theme.mixins.toolbar,
   bigScreen:{
@@ -67,6 +65,8 @@ const useStyles = makeStyles(theme => ({
   },
   menuItems:{
     marginRight:theme.spacing(9)
+  },
+  chat:{
   }
 }));
 
@@ -91,9 +91,9 @@ function MenuAppBar(props) {
         setUnderline(currentPath)
       })
       return (
-        <div className={classes.root}>
-          <AppBar className={classes.navBar} position="static">
-            <Toolbar>
+        <div id='navbar' className={classes.root}>
+          <AppBar id='navbar' className={classes.navBar} position="static">
+            <Toolbar id='navbar'>
               <Typography variant="h6" className={classes.title}>
                 Course-Chat
               </Typography>
@@ -102,7 +102,9 @@ function MenuAppBar(props) {
                 {props.isLogged===false && (<Link onClick={()=>setUnderline('login')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='login'})} to ="/login">Login</Link>)}
                 {props.isLogged && <Link onClick={()=>setUnderline('Feed')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='Feed'})} to ="/">Feed</Link>}
                 {props.isLogged && <Link onClick={()=>setUnderline('profile')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='profile'})} to ="/profile">Profile</Link>}
+                {/* <div className={classes.chat}> */}
                 {props.isLogged && <Link onClick={()=>setUnderline('chat')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='chat'})} to ="/chat">Messages</Link>} 
+                {/* </div> */}
                 {props.isLogged && <Link onClick={()=>setUnderline('login')} className = {clsx({[classes.link]:true,})} to ="/login" onClick={signOut}>LogOut</Link>}
               </div>
                 

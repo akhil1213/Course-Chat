@@ -6,8 +6,8 @@ import Signup from './components/Signup';
 import Login from './components/login'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Nav from './components/Nav';
-import UserProfile from './components/UserProfile';
-import ClassComponent from './components/ClassComponent'
+import UserProfile from './components/UserProfile/UserProfile';
+import ClassComponent from './components/ClassComponent/ClassComponent'
 import Chat from './components/Chat/Chat'
 import {useParams} from 'react-router';
 // import store from './store'

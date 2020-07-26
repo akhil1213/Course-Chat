@@ -70,7 +70,7 @@ export const getStudentsForClass = (dispatch,classInfo,id) =>{
     .then( (studentsResponse) => {
         console.log(studentsResponse.data);
         dispatch({
-            type:GET_QUERIED_CLASSES_FROM_DB,
+            type:'GET_QUERIED_STUDENTS_FROM_DB',
             payload:studentsResponse.data
         })
         dispatch({

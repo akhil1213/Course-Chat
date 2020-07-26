@@ -1,6 +1,6 @@
 const initialState = {
     currentClasses:[],
-    queriedClasses:[],
+    queriedClassMates:[],
     classInfo:{},
     classMates:[]
 }
@@ -23,10 +23,10 @@ export default function(state = initialState,action){
                 ...state,
                 currentClasses:action.payload
             }
-        case 'GET_QUERIED_CLASSES_FROM_DB':
+        case 'GET_QUERIED_STUDENTS_FROM_DB':
             return{
                 ...state,
-                queriedClasses:action.payload
+                queriedClassMates:action.payload
             }
         case 'SET_CLASS':
             return{
