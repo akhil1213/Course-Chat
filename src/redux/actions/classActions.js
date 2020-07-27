@@ -32,7 +32,7 @@ export const getClassesForUser = (dispatch,username) =>{
     const config = setConfig()
     console.log(config)
     console.log(uri)
-    axios.get(`${uri}${username}`,config)
+    axios.get(`${uri}classes/${username}`,config)
         .then( async (response) => {
                 console.log(response)
                 dispatch({
@@ -43,7 +43,7 @@ export const getClassesForUser = (dispatch,username) =>{
                 var waitForAsync = []
                 //first get classes then for each class get all students and concatenate all students
                 for(var i = 0; i < classes.length; i++){
-                    waitForAsync.push(axios.get(`${uri}course/` + classes[i]._id,config)//queries all students taking this specific course. need to change the name of route later.
+                    waitForAsync.push(axios.get(`${uri}classes/course/` + classes[i]._id,config)//queries all students taking this specific course. need to change the name of route later.
                     .then( (studentsResponse) => {
                         console.log(studentsResponse)
                         return studentsResponse.data
@@ -68,7 +68,7 @@ export const getClassesForUser = (dispatch,username) =>{
 }
 export const getStudentsForClass = (dispatch,classInfo,id) =>{
     const config = setConfig()
-    axios.get(`${uri}course/${id}`,config)
+    axios.get(`${uri}classes/course/${id}`,config)
     .then( (studentsResponse) => {
         console.log(studentsResponse.data);
         dispatch({

@@ -31,7 +31,7 @@ export const login = (dispatch,history,username,password) =>{
     }
     const body = JSON.stringify({username,password})
 
-    axios.post(`${uri}login`,body,config)
+    axios.post(`${uri}users/login`,body,config)
     .then(res => {
         dispatch({
             type:'LOGIN_SUCCESS',
@@ -60,7 +60,7 @@ export const register = (dispatch,history,fullName,email,username,password,colle
     }
     const body = JSON.stringify({fullName,email,username,password,college})
 
-    axios.post(`${uri}signup`,body,config)
+    axios.post(`${uri}users/signup`,body,config)
     .then(res => {
         console.log(res.data)
         const {token } = res.data
@@ -109,7 +109,7 @@ export const loginFailed = (dispatch,err) => {
 }
 export const loadUser = (dispatch,history) => {
     const config = setConfig()
-    axios.get(`${uri}get/user`,config)
+    axios.get(`${uri}users/get/user`,config)
         .then(res => {
             console.log(res.data)
             dispatch({type: "USER_LOADED", payload:res.data})
