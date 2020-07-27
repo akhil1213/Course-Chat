@@ -8,7 +8,7 @@ NodeJS<br/>
 MongoDB<br/>
 Socket.io<br/>
 ## Link
-[Link to website deployed using Heroku](http://coursechat2.herokuapp.com/)<br/>
+[Link to website deployed using Heroku](https://coursechat2.herokuapp.com/)<br/>
 ## Login credentials
 Login credentials:<br/>
 username:**bold test1**<br/>
