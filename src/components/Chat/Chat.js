@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import axios from 'axios'
 import chatters from "../../redux/reducers/chatters";
 import {setConfig} from '../../redux/actions/isLogged.js'
+import {uri} from '../../uri'
 class Chat extends React.Component{
   constructor(props){
     super(props);
@@ -37,14 +38,14 @@ class Chat extends React.Component{
       this.setState({chatters:this.props.allChatters})
       // don't even need state, we can use this props allMessages instead of using the state. maybe will change that later to clean it up
     }else{
-      axios.get(`http://localhost:5000/messages/${this.state.username}/chatters`,config)
+      axios.get(`${uri}messages/${this.state.username}/chatters`,config)
       .then(res=>{
         console.log(res.data)
         const allChattersWithoutCurrentUser = res.data.filter(chatter => chatter != this.state.username)
         allMessagesAndChatters.chatters = allChattersWithoutCurrentUser
         this.setState({chatters:allChattersWithoutCurrentUser})
       })
-      axios.get(`http://localhost:5000/messages/${this.state.username}`,config)
+      axios.get(`${uri}messages/${this.state.username}`,config)
       .then(res=>{
         allMessagesAndChatters.messages = res.data
         this.setState({allMessages:allMessagesAndChatters.messages})
@@ -145,7 +146,7 @@ class Chat extends React.Component{
     }
 
     //save message to database, but i have it commented bcause too many messages will stop saving eventually (free atlas).
-    // axios.post('http://localhost:5000/messages/',config,newMessage)
+    // axios.post(`${uri}messages/`,config,newMessage)
     // .then(()=>console.log('message posted correctly')).catch( (error) => {
     //     console.log(error);
     // });

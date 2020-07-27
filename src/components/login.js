@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+import React , { useState, useEffect } from 'react';
 import {NavLink, Link} from 'react-router-dom';
 import {Typography, Box,Container, MenuItem,Select, Input, InputLabel, TextField, Button} from '@material-ui/core'
 import {useSelector, useDispatch } from 'react-redux';
@@ -7,6 +7,7 @@ import { connect, dispatch} from 'react-redux';
 // import { logIn } from '../reducers/isLogged';
 // import {register} from '../actions/isLogged'
 import {login} from '../redux/actions/isLogged'
+import {clearErrors} from '../redux/actions/errorActions'
 //you have to install redux and install react-redux
 //i kind of used this website https://serverless-stack.com/chapters/create-a-login-page.html
 import axios from 'axios'
@@ -53,7 +54,11 @@ function Login(props) {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const dispatch = useDispatch();
+  useEffect(()=>{
+    props.clearErrors()
+  },[])
   function handleClick(e){
+    props.clearErrors()
     if(!validateForm())
         e.preventDefault();
     else{
@@ -108,7 +113,7 @@ function validatePassword(){
           Welcome back!
         </Typography>
         <div className={classes.width}>
-          <p>{props.errorMsg}</p>
+          <div id="errorlabel">{props.errorMsg}</div>
           <div className="spaceForInput">
             <TextField
               placeholder="Enter Username*"
@@ -151,7 +156,7 @@ const mapStateToProps = (state) => (
       {
         isLoading:state.logged.isLoading,
         isLogged:state.logged.loggedIn,
-        errorMsg:state.error.msg.message
+        errorMsg:state.error.msg
       }
 )
 
@@ -159,6 +164,9 @@ function mapDispatchToProps(dispatch){
   return {
     login:(history,username,password)=>{
         login(dispatch,history,username,password)
+    },
+    clearErrors:()=>{
+      dispatch(clearErrors())
     }
   }
 }

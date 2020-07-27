@@ -4,6 +4,7 @@ import axios from 'axios';
 import {returnErrors} from './errorActions'
 import jwt_decode from "jwt-decode";
 import {getClassesForUser} from './classActions'
+import { uri } from '../../uri'
 export function signIn(){
     return {
             type: SIGN_IN,
@@ -30,7 +31,7 @@ export const login = (dispatch,history,username,password) =>{
     }
     const body = JSON.stringify({username,password})
 
-    axios.post('http://localhost:5000/login',body,config)
+    axios.post(`${uri}login`,body,config)
     .then(res => {
         dispatch({
             type:'LOGIN_SUCCESS',
@@ -45,11 +46,10 @@ export const login = (dispatch,history,username,password) =>{
         
     }).catch( (err) => {
         console.log(err.response)
-        // dispatch(returnErrors(err.response.data,err.response.status,'LOGIN_FAIL'))//register_fail
+        dispatch(returnErrors(err.response.data.message,err.response.status,'LOGIN_FAIL'))//register_fail
         dispatch({
             type:'LOGIN_FAIL'
         })
-        console.log(err)
     });
 }
 export const register = (dispatch,history,fullName,email,username,password,college) =>{
@@ -60,7 +60,7 @@ export const register = (dispatch,history,fullName,email,username,password,colle
     }
     const body = JSON.stringify({fullName,email,username,password,college})
 
-    axios.post('http://localhost:5000/signup',body,config)
+    axios.post(`${uri}signup`,body,config)
     .then(res => {
         console.log(res.data)
         const {token } = res.data
@@ -81,7 +81,7 @@ export const register = (dispatch,history,fullName,email,username,password,colle
         dispatch({
             type:'REGISTER_FAIL'
         })
-        console.log(err)
+        console.log(err.response.data.message)
     });
 }
 export const setCurrentUser = decoded => {
@@ -109,7 +109,7 @@ export const loginFailed = (dispatch,err) => {
 }
 export const loadUser = (dispatch,history) => {
     const config = setConfig()
-    axios.get("http://localhost:5000/get/user",config)
+    axios.get(`${uri}get/user`,config)
         .then(res => {
             console.log(res.data)
             dispatch({type: "USER_LOADED", payload:res.data})

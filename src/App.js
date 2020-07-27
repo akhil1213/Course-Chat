@@ -17,9 +17,12 @@ import axios from 'axios'
 // import React from 'react';
 import store from './store'
 import {dispatch, connect} from 'react-redux'
+import { uri } from './uri'
 class App extends React.Component {
   componentDidMount(){
-    // this.props.loadUser()
+    console.log('yo')
+    console.log(uri)
+    // loadUser()
   }
   render(){
     return ( 
