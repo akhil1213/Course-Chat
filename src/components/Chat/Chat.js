@@ -22,7 +22,7 @@ class Chat extends React.Component{
         chatters:[],
         allMessages:[],
         messagesToShow:[],//messages get filtered 
-        socket:io('http://localhost:4000/'),
+        socket:io('https://still-falls-89885.herokuapp.com/'),
         // https://still-falls-89885.herokuapp.com/
         message:'',
         modalOpened:false,
