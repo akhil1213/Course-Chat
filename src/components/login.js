@@ -163,7 +163,7 @@ const mapStateToProps = (state) => (
 function mapDispatchToProps(dispatch){
   return {
     login:(history,username,password)=>{
-        login(dispatch,history,username,password)
+        login(dispatch,history,username.toLowerCase(),password)
     },
     clearErrors:()=>{
       dispatch(clearErrors())

@@ -13,7 +13,7 @@ class Messages extends React.Component{
     render(){
       return(
         <ScrollToBottom className="messages">
-          {this.props.messages.map((message, i) => <div key={i}><Message message={message} currentChatter={this.props.currentChatter} username={this.props.currentUser}/></div>)}
+          {this.props.messages.map((message, i) => <div key={i}><Message lastMessage={i===this.props.messages.length-1} message={message} currentChatter={this.props.currentChatter} username={this.props.currentUser}/></div>)}
         </ScrollToBottom>
       );      
     }

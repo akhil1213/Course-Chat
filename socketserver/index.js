@@ -29,6 +29,10 @@ io.on('connection', (socket) => {
     connectedClients[username] = socket.id
     console.log(connectedClients)
   })
+  socket.on('message_seen',(notifyUser,personWhoSaw)=>{
+    console.log(notifyUser + "just seen ur message!")
+    io.to(connectedClients[notifyUser]).emit('message_seen',personWhoSaw)
+  })
   // console.log(connectedClients)
   // socket.on('changedChatter',(currentUser) =>{
   //   io.to(connectedClients[currentUser].socketId).emit('private_message',connectedClients[currentUser])

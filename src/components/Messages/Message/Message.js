@@ -4,9 +4,10 @@ import './Message.css';
 
 import ReactEmoji from 'react-emoji';
 
-const Message = ({ message, currentChatter, username }) => {
+const Message = ({ message, currentChatter, username, lastMessage }) => {
   // console.log(message)
   // console.log(username)
+  // console.log(message.seen)
   var text = message.text || message.message// from the backend, i have field name as message but from the frontend i have the field name as text
   let time = message.created_at || "2020-07-01T08:35:13.634Z";
   if(time.length > 5) time = time.substring(11,16)
@@ -15,6 +16,7 @@ const Message = ({ message, currentChatter, username }) => {
     hour%=12
     time = hour + time.substring(2)
   }
+  // console.log(lastMessage)
   // console.log(time)
   // //these messages can be either from someone sending it to us but if not 
   // //then when we're sending the message so user is the person we're sending the message to.
@@ -49,6 +51,7 @@ const Message = ({ message, currentChatter, username }) => {
           <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
         </div>
         <p className="time">{time}</p>
+        {(lastMessage && message.seen) && (<p className="seen">seen</p>) }
       </div>
     ):
       (
@@ -58,6 +61,7 @@ const Message = ({ message, currentChatter, username }) => {
           </div>
 
           <p className="time">{time}</p>
+          {(lastMessage && message.seen) && (<p className="seen">seen</p>) }
         </div>
       )
   )

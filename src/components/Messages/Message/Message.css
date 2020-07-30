@@ -54,3 +54,6 @@
 .dragEnd{
   flex-grow:1
 }
+.seen{
+  color:green
+}

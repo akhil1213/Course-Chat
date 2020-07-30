@@ -23,6 +23,7 @@ class Chat extends React.Component{
         allMessages:[],
         messagesToShow:[],//messages get filtered 
         socket:io('http://localhost:4000/'),
+        // https://still-falls-89885.herokuapp.com/
         message:'',
         modalOpened:false,
         notification:{}
@@ -81,10 +82,13 @@ class Chat extends React.Component{
           this.setState({notification:{}})
         }
         if(this.state.chatters.indexOf(from) === -1) this.setState({chatters:[...this.state.chatters,from]})
+        const seen = this.state.currentChatter === from
+        if(seen) this.state.socket.emit('message_seen',from, this.props.user.username)
         var message = {
           from:from,
           to:this.state.username,
-          message:message
+          message:message,
+          // seen:seen
           //missing id and created_at but that is stored on the backend, this can cause a problem later on
         }
         this.props.addMessage(message)//add message to redux
@@ -96,7 +100,6 @@ class Chat extends React.Component{
         //   })
         //   this.props.addChatter(to)
         // }
-        console.log(message)
         this.setState({
           allMessages:[...this.state.allMessages,message]
         })
@@ -104,6 +107,24 @@ class Chat extends React.Component{
         // this.setState({allMessages:messagesAndChatters})
         this.filterMessages(this.state.allMessages,this.state.currentChatter)
     });
+    this.state.socket.on('message_seen', (personWhoSaw) => {
+      console.log(personWhoSaw+"just seen your message!")
+      for(var i = this.state.allMessages.length-1; i >=0; i--){
+        if(this.state.allMessages[i].to === personWhoSaw){
+          this.setState({
+            allMessages:[
+              ...this.state.allMessages.slice(0,i),
+              Object.assign({},this.state.allMessages[i],{seen:true}),
+              ...this.state.allMessages.slice(i+1)
+            ]
+          })
+          console.log(this.state.allMessages[i])
+          this.filterMessages(this.state.allMessages,this.state.currentChatter)
+          console.log(this.state.messagesToShow)
+          break;
+        }
+      }
+    })
     // this.props.classMates
   }
   componentWillUnmount(){
@@ -136,7 +157,7 @@ class Chat extends React.Component{
         message:this.state.message,
         from: this.state.username,
         to:this.state.currentChatter,
-        created_at:time
+        created_at:time,
       };
       this.setState({messagesToShow:[...this.state.messagesToShow,newMessage]})
       this.props.addMessage(newMessage)
@@ -166,6 +187,14 @@ class Chat extends React.Component{
     if(this.state.notification.user === classmate) this.setState({notification:{}})
     this.setState({currentChatter:classmate})//if messages are sent now, it will be sent to the current chatter.
     this.filterMessages(this.state.allMessages,classmate)//you want to now show messages for the new focused current new chatter.
+    for(var i = this.state.allMessages.length-1; i >=0; i--){
+      if(this.state.allMessages[i].to === classmate) break;
+      if(this.state.allMessages[i].from === classmate){
+        console.log(this.state.allMessages[i])
+        this.state.socket.emit('message_seen',classmate,this.props.user.username)
+        break;
+      }
+    }
   }
   openModal = () => {
     this.setState({modalOpened:true})
