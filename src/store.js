@@ -4,13 +4,14 @@ import loggedReducer from './redux/reducers/isLogged'
 import errorReducer from './redux/reducers/errorReducer'
 import chattersReducer from './redux/reducers/chatters'
 import classesReducer from './redux/reducers/classes'
-
+import footerReducer from './redux/reducers/footerReducer'
 const middleware = [thunk];
 const appReducer = combineReducers({
     logged:loggedReducer,
     error:errorReducer,
     chatters:chattersReducer,
-    classes:classesReducer
+    classes:classesReducer,
+    footer:footerReducer
 })
 const rootReducer = (state, action) => {
     if (action.type === 'SIGN_OUT') {

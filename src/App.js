@@ -18,10 +18,10 @@ import axios from 'axios'
 import store from './store'
 import {dispatch, connect} from 'react-redux'
 import { uri } from './uri'
+import FootBar from './components/Footer/Footer'
 class App extends React.Component {
   componentDidMount(){
-    console.log('yo')
-    console.log(uri)
+    // console.log(this.props.history.location.pathname)
     // loadUser()
   }
   render(){
@@ -35,6 +35,7 @@ class App extends React.Component {
           <Route path="/profile" component={UserProfile}/>
           <Route path="/class" component={ClassComponent}/>
           <Route path="/chat" component={Chat}/>
+          <FootBar/>
         </div>
       </Router>
     );//use exact /signup doesnt bring along feed component

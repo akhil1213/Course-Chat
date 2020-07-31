@@ -86,7 +86,13 @@ function MenuAppBar(props) {
         currentPath = currentPath.substring(1)
         console.log(currentPath=='')
         if(currentPath==''){
+          props.setFooterPosition('static')
           setUnderline('Feed')
+        }
+        if(currentPath=='' || currentPath == 'login' || currentPath == 'signup'){
+          props.setFooterPosition('fixed')
+        }else{
+          props.setFooterPosition('static')
         }
         setUnderline(currentPath)
       })
@@ -155,7 +161,10 @@ function mapDispatchToProps(dispatch){
   return {
     signOut:()=>{
         signOut(dispatch)
-      }
+    },
+    setFooterPosition:(pos)=>{
+      dispatch({type:'SET_POSITION',payload:pos})
+    }
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(MenuAppBar))//we get signout action from here 

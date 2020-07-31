@@ -1,0 +1,51 @@
+.footerContainer{
+    background-color:white;
+    height:200px;
+    width:100%;
+    border-top: 1px solid gray;
+    bottom:0;
+    left:0;
+    color:#33435e
+}
+.static{
+    position:static
+}
+.fixed{
+    position:fixed
+}
+.row{
+    display:flex;
+    justify-content: space-between
+}
+.column{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+#copyright{
+    font-size: smaller;
+    font-weight: bolder;
+}
+#phonenumber{
+    font-size: larger;
+    font-weight:bolder;
+}
+a{
+    color:#33435e;
+    font-weight:bolder;
+    text-decoration: none;
+    font-size: larger;
+}
+.iconContainer{
+    margin-top: 20px;
+}
+.iconContainer a{
+    margin-left: 8px;
+}
+.img{
+    max-height: 100%;
+    width:100px;
+}
+.center{
+    justify-content: center;
+}
