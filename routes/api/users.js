@@ -83,7 +83,6 @@ router.post(
             password,
         } = req.body;
         console.log(username)
-        console.log(password)
         let user_;
         User.findOne({username})
             .then(user => {
@@ -109,7 +108,7 @@ router.post(
                     jwt.sign(
                         payload,
                         "akhil_loves_coding!", {
-                            expiresIn: 100000
+                            expiresIn: 10000000
                         },
                         (err, token) => {
                             console.log(err)

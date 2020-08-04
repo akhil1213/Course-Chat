@@ -18,7 +18,7 @@ import { connect , dispatch} from 'react-redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-
+import socket from '../socket'
 const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
@@ -86,10 +86,15 @@ function MenuAppBar(props) {
         currentPath = currentPath.substring(1)
         console.log(currentPath=='')
         if(currentPath==''){
-          props.setFooterPosition('static')
           setUnderline('Feed')
         }
-        if(currentPath=='' || currentPath == 'login' || currentPath == 'signup'){
+        props.setCurrentComponent(currentPath)//for different private message logic if user is in chat or not in chat
+        /*
+          set footer position on bottom of screen always but for login view, it must be fixed since page height is small
+          for every other view, page is scrollable so set the position to be anything but fixed so its below
+          and doesn't overlap content.
+        */
+        if(currentPath=='' || currentPath == 'login'){
           props.setFooterPosition('fixed')
         }else{
           props.setFooterPosition('static')
@@ -113,49 +118,24 @@ function MenuAppBar(props) {
                 {/* </div> */}
                 {props.isLogged && <Link onClick={()=>setUnderline('login')} className = {clsx({[classes.link]:true,})} to ="/login" onClick={signOut}>LogOut</Link>}
               </div>
-                
-
-                {/* <IconButton
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  // onClick={handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-
-                <Menu>
-                <MuiThemeProvider theme={theme}>
-                  {props.isLogged && <MenuItem onClick={signOut}><Link to ="/signup">Log Out</Link></MenuItem>}
-                  <MenuItem classes={{ root: 'menu-item', selected: 'selected' }}><Link to ="/signup">Sign up</Link></MenuItem>
-                  <MenuItem style={{backgroundColor: 'red', color: 'white'}} ><Link to ="/profile" >User Profile</Link></MenuItem>
-                </MuiThemeProvider>
-                </Menu> */}
               <IconButton edge="start" className={classes.menuButton} color="primary" size='medium' aria-label="menu">
                 <MenuIcon color='blue'/>
               </IconButton>
             </Toolbar>
           </AppBar>
-          {/* <div>
-            <div className={classes.toolbar} />
-            <List>
-              {props.isLogged===false && (<ListItem><Link className = {[classes.link]}   to ="/signup">Sign-Up</Link></ListItem>)}
-              {props.isLogged===false && (<ListItem><Link className = {[classes.link]} to ="/login">Login</Link></ListItem>)}
-              {props.isLogged && <ListItem><Link className = {classes.link} to ="/profile">Profile</Link></ListItem>}
-              {props.isLogged && <ListItem><Link className = {classes.link} to ="/chat">Messages</Link></ListItem>} 
-              {props.isLogged && <ListItem><Link className = {classes.link} to ="/signup" onClick={signOut}>LogOut</Link></ListItem>}
-            </List>
-          </div> */}
         </div>
       );
 }
 
 
 const mapStateToProps = (store) => (
-  console.log(store),{
-    isLogged:store.logged.loggedIn//isLogged is now a prop
-})
+  {
+    isLogged:store.logged.loggedIn,//isLogged is now a prop
+    allMessages:store.chatters.messages,
+    allChatters:store.chatters.chatters,
+    user:store.logged.user,
+  }
+)
 
 function mapDispatchToProps(dispatch){
   return {
@@ -164,6 +144,30 @@ function mapDispatchToProps(dispatch){
     },
     setFooterPosition:(pos)=>{
       dispatch({type:'SET_POSITION',payload:pos})
+    },
+    addMessage:(message)=>{
+      dispatch({
+        type:'ADD_MESSAGE',
+        payload:message
+      })
+    },
+    setChatters:(chatters)=>{
+      dispatch({
+        type:'SET_CHATTERS',
+        payload:chatters
+      })
+    },
+    setMessages:(messages)=>{
+      dispatch({
+        type:'SET_MESSAGES',
+        payload:messages
+      })
+    },
+    setCurrentComponent:(component)=>{
+      dispatch({
+        type:'SET_CURRENT_COMPONENT',
+        payload:component
+      })
     }
   }
 }

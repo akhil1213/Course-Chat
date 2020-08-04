@@ -1,15 +1,11 @@
 const initialState = {
         chatters:[],
         messages:[],
-        socketId:''
+        notification:[],
+        currentChatter:'',
 }
 export default function(state = initialState,action){
     switch(action.type){
-        case 'set_messages_and_chatters_from_db':
-            return{
-                chatters:action.payload.chatters,
-                messages:action.payload.messages,
-            }
         case 'ADD_MESSAGE':
             return{
                 ...state,
@@ -19,6 +15,21 @@ export default function(state = initialState,action){
             return{
                 ...state,
                 chatters:[...state.chatters,action.payload]
+            }
+        case 'SET_CHATTERS':
+            return{
+                ...state,
+                chatters:action.payload
+            }
+        case 'SET_MESSAGES':
+            return{
+                ...state,
+                messages:action.payload
+            }
+        case 'SET_CURRENT_CHATTER':
+            return{
+                ...state,
+                currentChatter:action.payload
             }
         default:
             return state

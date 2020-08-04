@@ -1,57 +1,35 @@
 import io from "socket.io-client";
-var socket = io('https://still-falls-89885.herokuapp.com/')
-
-socket.emit('user_connected',this.state.username)
-socket.on('private_message', (message,from) => {
-  console.log('message received!')
-    if(from!==this.state.currentChatter){
-      this.setState({notification:{message,user:from}})
-    }else{
-      this.setState({notification:{}})
-    }
-    if(this.state.chatters.indexOf(from) === -1) this.setState({chatters:[...this.state.chatters,from]})
-    const seen = this.state.currentChatter === from
-    if(seen) socket.emit('message_seen',from, this.props.user.username)
-    var message = {
-      from:from,
-      to:this.state.username,
-      message:message,
-      // seen:seen
-      //missing id and created_at but that is stored on the backend, this can cause a problem later on
-    }
-    this.props.addMessage(message)//add message to redux
-    //if the message is being sent to a new chatter, update redux and current state.
-
-    // if(this.state.chatters.findIndex(to) == -1) {
-    //   this.setState({
-    //     chatters: [...this.state.chatters, to]
-    //   })
-    //   this.props.addChatter(to)
-    // }
-    this.setState({
-      allMessages:[...this.state.allMessages,message]
-    })
-    // this.setState({chatters:messagesAndChatters.chatters})
-    // this.setState({allMessages:messagesAndChatters})
-    this.filterMessages(this.state.allMessages,this.state.currentChatter)
-});
-socket.on('message_seen', (personWhoSaw) => {
-  console.log(personWhoSaw+"just seen your message!")
-  for(var i = this.state.allMessages.length-1; i >=0; i--){
-    if(this.state.allMessages[i].to === personWhoSaw){
-      this.setState({
-        allMessages:[
-          ...this.state.allMessages.slice(0,i),
-          Object.assign({},this.state.allMessages[i],{seen:true}),
-          ...this.state.allMessages.slice(i+1)
-        ]
-      })
-      console.log(this.state.allMessages[i])
-      this.filterMessages(this.state.allMessages,this.state.currentChatter)
-      console.log(this.state.messagesToShow)
-      break;
-    }
+var socket = io('http://localhost:4000')
+const getTime = () =>{
+  const today = new Date();
+  let minutes = today.getMinutes()
+  if(minutes/10<1) {
+    minutes = "0"+minutes
   }
-})
+  const time = today.getHours()%12 + ":" + minutes;
+  return time
+}
+const initializeSocket = (props, currentComponent) =>{
+  socket.emit('user_connected',props.user.username)
+  if(currentComponent!='chat'){
+    socket.removeAllListeners()
+    /*this is crucial because you can have duplicate listeners so private message from
+     chat component and on private message from every other component which leads to 
+     duplicated messages.*/
+    socket.on('private_message', (message,from) => {
+      console.log(props)
+      console.log(message)
+        var message = {
+          from:from,
+          to:props.user.username,
+          message:message,
+          time:getTime()
+        }
+        props.addMessage(message)//add message to redux 
+    });
+  }
+}
 
-export default socket
+
+
+export default {initializeSocket,socket}

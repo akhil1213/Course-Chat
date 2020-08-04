@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useEffect, useState} from 'react';
 //import logo from './logo.svg';
 import './App.css';
 import Feed from './components/Feed/Feed';
@@ -9,45 +9,74 @@ import Nav from './components/Nav';
 import UserProfile from './components/UserProfile/UserProfile';
 import ClassComponent from './components/ClassComponent/ClassComponent'
 import Chat from './components/Chat/Chat'
-import {useParams} from 'react-router';
-// import store from './store'
-import {returnErrors} from './redux/actions/errorActions'
 import {loadUser} from './redux/actions/isLogged'
-import axios from 'axios'
-// import React from 'react';
-import store from './store'
-import {dispatch, connect} from 'react-redux'
-import { uri } from './uri'
+import getMessagesAndChatters from './redux/actions/messageActions'
+import {connect} from 'react-redux'
 import FootBar from './components/Footer/Footer'
-class App extends React.Component {
-  componentDidMount(){
-    // console.log(this.props.history.location.pathname)
-    // loadUser()
-  }
-  render(){
-    return ( 
-      <Router>
-        <div className="App">
-          <Nav/>
-          <Route path="/" exact component={Feed}/>
-          <Route path="/signup" component={Signup}/>
-          <Route path="/login" component={Login}/>
-          <Route path="/profile" component={UserProfile}/>
-          <Route path="/class" component={ClassComponent}/>
-          <Route path="/chat" component={Chat}/>
-          <FootBar/>
-        </div>
-      </Router>
-    );//use exact /signup doesnt bring along feed component
-  }
+import socket from './socket'
+
+function App(props) {
+  // const [changeSocket, setChangeSocket] = useState(true)
+  useEffect(()=>{
+    if(props.user){
+      if(props.currentComponent == 'chat') {
+        socket.initializeSocket(props, 'chat')
+      }
+      else {
+        socket.initializeSocket(props, 'everywhere else')
+      }
+      getMessagesAndChatters(props)
+    }
+  })
+  return ( 
+    <Router>
+      <div className="App">
+        <Nav/>
+        <Route path="/" exact component={Feed}/>
+        <Route path="/signup" component={Signup}/>
+        <Route path="/login" component={Login}/>
+        <Route path="/profile" component={UserProfile}/>
+        <Route path="/class" component={ClassComponent}/>
+        <Route path="/chat" component={Chat}/>
+        <FootBar/>
+      </div>
+    </Router>
+  );//use exact /signup doesnt bring along feed component
 }
+const mapStateToProps = (state) =>(
+  {
+    user:state.logged.user,
+    allMessages:state.chatters.messages,
+    allChatters:state.chatters.chatters,
+    currentComponent:state.footer.currentComponent
+  }
+)
+
 
 function mapDispatchToProps(dispatch){
   return {
     loadUser:()=>{
-        loadUser(dispatch)
-      }
+      loadUser(dispatch)
+    },
+    addMessage:(message)=>{
+      dispatch({
+        type:'ADD_MESSAGE',
+        payload:message
+      })
+    },
+    setChatters:(chatters)=>{
+      dispatch({
+        type:'SET_CHATTERS',
+        payload:chatters
+      })
+    },
+    setMessages:(messages)=>{
+      dispatch({
+        type:'SET_MESSAGES',
+        payload:messages
+      })
+    }
   }
 }
-export default connect(null,mapDispatchToProps)(App)
+export default connect(mapStateToProps,mapDispatchToProps)(App)
 //https://dev.to/rubiin/ubuntu-increase-inotify-watcher-file-watch-limit-kf4
