@@ -67,6 +67,12 @@ const useStyles = makeStyles(theme => ({
     marginRight:theme.spacing(9)
   },
   chat:{
+
+  },
+  numOfMessages:{
+    fontSize:20,
+    display:"inline",
+    color:'#db2b25'
   }
 }));
 
@@ -114,7 +120,12 @@ function MenuAppBar(props) {
                 {props.isLogged && <Link onClick={()=>setUnderline('Feed')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='Feed'})} to ="/">Feed</Link>}
                 {props.isLogged && <Link onClick={()=>setUnderline('profile')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='profile'})} to ="/profile">Profile</Link>}
                 {/* <div className={classes.chat}> */}
-                {props.isLogged && <Link onClick={()=>setUnderline('chat')} className = {clsx({[classes.link]:true,[classes.underline]:underline==='chat'})} to ="/chat">Messages</Link>} 
+                {props.isLogged &&
+                 <Link onClick={()=>setUnderline('chat')} 
+                      className = {clsx({[classes.link]:true,[classes.underline]:underline==='chat'})}
+                       to ="/chat">
+                         Messages<Typography className={classes.numOfMessages}>{props.notifications.length}</Typography>
+                  </Link>} 
                 {/* </div> */}
                 {props.isLogged && <Link onClick={()=>setUnderline('login')} className = {clsx({[classes.link]:true,})} to ="/login" onClick={signOut}>LogOut</Link>}
               </div>
@@ -131,8 +142,7 @@ function MenuAppBar(props) {
 const mapStateToProps = (store) => (
   {
     isLogged:store.logged.loggedIn,//isLogged is now a prop
-    allMessages:store.chatters.messages,
-    allChatters:store.chatters.chatters,
+    notifications:store.chatters.notifications,
     user:store.logged.user,
   }
 )

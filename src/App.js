@@ -18,6 +18,9 @@ import socket from './socket'
 function App(props) {
   // const [changeSocket, setChangeSocket] = useState(true)
   useEffect(()=>{
+    if(props.user)getMessagesAndChatters(props)
+  },[])//can't have redux actions inside of update lifecycle methods so thats why its in here.[] means compDidMount
+  useEffect(()=>{
     if(props.user){
       if(props.currentComponent == 'chat') {
         socket.initializeSocket(props, 'chat')
@@ -25,7 +28,6 @@ function App(props) {
       else {
         socket.initializeSocket(props, 'everywhere else')
       }
-      getMessagesAndChatters(props)
     }
   })
   return ( 
@@ -48,7 +50,7 @@ const mapStateToProps = (state) =>(
     user:state.logged.user,
     allMessages:state.chatters.messages,
     allChatters:state.chatters.chatters,
-    currentComponent:state.footer.currentComponent
+    currentComponent:state.footer.currentComponent,
   }
 )
 
@@ -74,6 +76,18 @@ function mapDispatchToProps(dispatch){
       dispatch({
         type:'SET_MESSAGES',
         payload:messages
+      })
+    },
+    addNotification:(user)=>{
+      dispatch({
+        type:"ADD_NOTIFICATION",
+        payload:user
+      })
+    },
+    setNotifications:(notifications)=>{
+      dispatch({
+        type:"SET_NOTIFICATIONS",
+        payload:notifications
       })
     }
   }

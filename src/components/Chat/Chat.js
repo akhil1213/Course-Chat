@@ -27,8 +27,6 @@ class Chat extends React.Component{
         // https://still-falls-89885.herokuapp.com/
         message:'',
         modalOpened:false,
-        notification:{},
-        loading:false
     };
   }
   componentDidMount(){
@@ -41,12 +39,6 @@ class Chat extends React.Component{
     }
     socketExport.socket.removeAllListeners()
     socketExport.socket.on('private_message', (message,from) => {
-      console.log('message received!')
-        // if(from!==this.props.currentChatter){
-        //   this.setState({notification:{message,user:from}})
-        // socketExport.}else{
-        //   this.setState({notification:{}})
-        // }
         if(this.props.allChatters.indexOf(from) === -1) this.props.addChatter(from)
         const seen = this.props.currentChatter === from
         if(seen) socketExport.socket.emit('message_seen',from, this.props.user.username)
@@ -54,6 +46,7 @@ class Chat extends React.Component{
           from:from,
           to:this.state.username,
           message:message,
+          time:socketExport.getTime()
           //missing id and created_at but that is stored on the backend, this can cause a problem later on
         }
         this.props.addMessage(message)//add message to redux
@@ -124,14 +117,16 @@ class Chat extends React.Component{
     this.changeChatter(chatterUsername)
   }
   changeChatter = (classmate) =>{
-    if(this.state.notification.user === classmate) this.setState({notification:{}})
     this.props.setCurrentChatter(classmate)//if messages are sent now, it will be sent to the current chatter.
     this.filterMessages(this.props.allMessages,classmate)//you want to now show messages for the new focused current new chatter.
     for(var i = this.props.allMessages.length-1; i >=0; i--){
       if(this.props.allMessages[i].to === classmate) break;
       if(this.props.allMessages[i].from === classmate){
-        console.log(this.props.allMessages[i])
         socketExport.socket.emit('message_seen',classmate,this.props.user.username)
+        const lastMessage = this.state.allMessages[this.state.allMessages.length-1]
+        const notificationUsers = this.props.notifications.map((notificationObj)=> {return notificationObj.from})
+        const indexOfUserToRemove = notificationUsers.findIndex(notificationUser => notificationUser === classmate)
+        this.props.removeNotification(indexOfUserToRemove)
         break;
       }
     }
@@ -145,13 +140,12 @@ class Chat extends React.Component{
   render(){
       return (
         <div className="outerContainer">
-          <Chatters notification={this.state.notification} username = {this.state.username} chatters = {this.props.allChatters} changeChatter={this.changeChatter} currentChatter={this.props.currentChatter}/>
+          <Chatters notifications={this.props.notifications} username = {this.state.username} chatters = {this.props.allChatters} changeChatter={this.changeChatter} currentChatter={this.props.currentChatter}/>
           <div className="container">
               <InfoBar openModal = {this.openModal} room={this.props.currentChatter}  />
               <Messages messages={this.state.messagesToShow} currentChatter={this.props.currentChatter} currentUser={this.state.username} />
               <Input message={this.state.message} setMessage={this.setMessage} sendMessage={this.sendMessage} currentChatter={this.props.currentChatter}/>
               {this.state.modalOpened && <ClassmatesModal addChatter = {this.addChatter} changeChatter= {this.changeChatter} modalOpened={this.state.modalOpened}classMates={this.props.classMates} closeModal={this.closeModal}/>}
-              {this.state.loading && <p>loading...</p>}
           </div>
         </div>
       );
@@ -166,6 +160,7 @@ const mapStateToProps = (state) => (
       {
         allMessages:state.chatters.messages,
         allChatters:state.chatters.chatters,
+        notifications:state.chatters.notifications,
         currentChatter:state.chatters.currentChatter,
         classMates:state.classes.classMates,
         user:state.logged.user
@@ -209,7 +204,13 @@ function mapDispatchToProps(dispatch){
         type:'SET_CURRENT_CHATTER',
         payload:newChatter
       })
-    }
+    },
+    removeNotification:(userIndex)=>{
+      dispatch({
+        type:'REMOVE_NOTIFICATION',
+        payload:userIndex
+      })
+    },
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Chat)
