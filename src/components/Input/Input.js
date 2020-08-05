@@ -3,7 +3,8 @@ import React from 'react';
 import './Input.css';
 
 const Input = ({ setMessage, sendMessage, message, currentChatter }) => (
-  <form className="form">
+  // <div className="container">
+    <form className="form">
     <input
       className="input"
       type="text"
@@ -14,6 +15,8 @@ const Input = ({ setMessage, sendMessage, message, currentChatter }) => (
     />
     <button disabled = {currentChatter == ''} className={currentChatter !== '' ? "sendButton" : 'redSendButton'} onClick={e => sendMessage(e)}>Send</button>
   </form>
+  // </div>
+  
 )
 
 export default Input;

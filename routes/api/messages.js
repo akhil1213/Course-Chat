@@ -48,7 +48,6 @@ router.get("/:user/chatters", auth, (req,res) => {
 });
 
 router.post("/", auth, (req,res) => {//auth is middleware, if auth throws error, this http post method will not be called.
-    console.log(req.body)
     const newMessage = new Message({
         from: req.body.from,
         to:req.body.to,

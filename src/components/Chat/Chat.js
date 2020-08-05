@@ -103,6 +103,10 @@ class Chat extends React.Component{
       this.props.addMessage(newMessage)
       // this.setState({allMessages:[...this.state.allMessages,newMessage]})
       // this.filterMessages(this.state.allMessages,this.props.currentChatter)
+      const config = setConfig()
+      console.log(uri)
+      // const body = newMessage; // add to db!
+      // axios.post(`${uri}messages/`,body,config)
       this.setMessage('')
     }
   }
@@ -119,17 +123,16 @@ class Chat extends React.Component{
   changeChatter = (classmate) =>{
     this.props.setCurrentChatter(classmate)//if messages are sent now, it will be sent to the current chatter.
     this.filterMessages(this.props.allMessages,classmate)//you want to now show messages for the new focused current new chatter.
-    for(var i = this.props.allMessages.length-1; i >=0; i--){
-      if(this.props.allMessages[i].to === classmate) break;
-      if(this.props.allMessages[i].from === classmate){
+    // for(var i = this.props.allMessages.length-1; i >=0; i--){
+    //   if(this.props.allMessages[i].from === classmate){
         socketExport.socket.emit('message_seen',classmate,this.props.user.username)
-        const lastMessage = this.state.allMessages[this.state.allMessages.length-1]
+        // const lastMessage = this.state.allMessages[this.state.allMessages.length-1]
         const notificationUsers = this.props.notifications.map((notificationObj)=> {return notificationObj.from})
         const indexOfUserToRemove = notificationUsers.findIndex(notificationUser => notificationUser === classmate)
         this.props.removeNotification(indexOfUserToRemove)
-        break;
-      }
-    }
+        // break;
+      // }
+    // }
   }
   openModal = () => {
     this.setState({modalOpened:true})

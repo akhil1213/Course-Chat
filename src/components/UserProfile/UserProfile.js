@@ -103,7 +103,7 @@ class UserProfile extends React.Component{
         };
         this.state.classes.push(newClass);
         this.setState({classes:this.state.classes});
-        axios.post('http://localhost:5000/',{
+        axios.post('http://localhost:5000/classes/',{
             courseName:this.state.class,
             profName:this.state.profName,
             time:this.state.time,

@@ -17,14 +17,16 @@ const initializeSocket = (props, currentComponent) =>{
      chat component and on private message from every other component which leads to 
      duplicated messages.*/
     socket.on('private_message', (message,from) => {
-      var message = {
+      var messageObject = {
         from:from,
         to:props.user.username,
         message:message,
         time:getTime()
       }
-      props.addNotification(from)
-      props.addMessage(message)//add message to redux 
+
+      props.addChatter(from)
+      props.addNotification({from,message})
+      props.addMessage(messageObject)//add message to redux 
     });
   }
 }

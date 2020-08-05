@@ -37,7 +37,7 @@ const FooterPage = ({position}) => {
     );
 }
 const mapStateToProps = (store) => (
-    console.log(store),{
+    {
       position:store.footer.position//isLogged is now a prop
     })
 export default connect(mapStateToProps,null)(FooterPage)

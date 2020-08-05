@@ -9,35 +9,40 @@ const notificationIncludes = (notifications,user) => {
     }
     return false
 }
-const getNotifications = (props)=>{
-    let currentUser = props.user.username;
+const getNotifications = (currentUser,allMessages,dispatch)=>{
     let notifications = []
-    for(let i = props.allMessages.length-1; i >= 0; i--){
-        if(props.allMessages[i].to == currentUser && props.allMessages[i].seen == false){
-            console.log(props.allMessages[i])
-            if(!notificationIncludes(notifications,props.allMessages[i].from)){
-                const from = props.allMessages[i].from
-                const message = props.allMessages[i].message
+    for(let i = allMessages.length-1; i >= 0; i--){
+        if(allMessages[i].to == currentUser && (allMessages[i].seen == false || allMessages[i].seen == undefined)){
+            if(!notificationIncludes(notifications,allMessages[i].from)){
+                const from = allMessages[i].from
+                const message = allMessages[i].message
                 notifications.push({from,message})//there is a notification from this user.
             }
         }
     }
-    props.setNotifications(notifications)
+    dispatch({
+        type:"SET_NOTIFICATIONS",
+        payload:notifications
+    })
 }
-export default function getMessagesAndChatters(props){
+export default function getMessagesAndChatters(dispatch,username){
     const config = setConfig()
-    if (props.allMessages.length === 0 && props.allChatters.length === 0){
-        axios.get(`${uri}messages/${props.user.username}/chatters`,config)
+    axios.get(`${uri}messages/${username}/chatters`,config)
+        .then(res=>{
+            const chatters = res.data.filter(chatter => chatter != username)
+            dispatch({
+                type:'SET_CHATTERS',
+                payload:chatters
+            })
+        }).then(()=>{//get messages for user
+            axios.get(`${uri}messages/${username}`,config)
             .then(res=>{
-            const allChattersWithoutCurrentUser = res.data.filter(chatter => chatter != props.user.username)
-            props.setChatters(allChattersWithoutCurrentUser)
-            }).then(()=>{//get messages for user
-                axios.get(`${uri}messages/${props.user.username}`,config)
-                .then(res=>{
-                    props.setMessages(res.data)
+                dispatch({
+                    type:'SET_MESSAGES',
+                    payload:res.data
                 })
-        })
-    }
-    getNotifications(props);
+                getNotifications(username,res.data,dispatch)
+            })
+    })
 }
     

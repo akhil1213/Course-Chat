@@ -14,36 +14,33 @@ import getMessagesAndChatters from './redux/actions/messageActions'
 import {connect} from 'react-redux'
 import FootBar from './components/Footer/Footer'
 import socket from './socket'
-
-function App(props) {
-  // const [changeSocket, setChangeSocket] = useState(true)
-  useEffect(()=>{
-    if(props.user)getMessagesAndChatters(props)
-  },[])//can't have redux actions inside of update lifecycle methods so thats why its in here.[] means compDidMount
-  useEffect(()=>{
-    if(props.user){
-      if(props.currentComponent == 'chat') {
-        socket.initializeSocket(props, 'chat')
+class App extends React.Component {
+  componentDidUpdate(){
+    if(this.props.user){
+      if(this.props.currentComponent == 'chat') {
+        socket.initializeSocket(this.props, 'chat')
       }
       else {
-        socket.initializeSocket(props, 'everywhere else')
+        socket.initializeSocket(this.props, 'everywhere else')
       }
     }
-  })
-  return ( 
-    <Router>
-      <div className="App">
-        <Nav/>
-        <Route path="/" exact component={Feed}/>
-        <Route path="/signup" component={Signup}/>
-        <Route path="/login" component={Login}/>
-        <Route path="/profile" component={UserProfile}/>
-        <Route path="/class" component={ClassComponent}/>
-        <Route path="/chat" component={Chat}/>
-        <FootBar/>
-      </div>
-    </Router>
-  );//use exact /signup doesnt bring along feed component
+  }
+  render(){
+    return ( 
+      <Router>
+        <div className="App">
+          <Nav/>
+          <Route path="/" exact component={Feed}/>
+          <Route path="/signup" component={Signup}/>
+          <Route path="/login" component={Login}/>
+          <Route path="/profile" component={UserProfile}/>
+          <Route path="/class" component={ClassComponent}/>
+          <Route path="/chat" component={Chat}/>
+          <FootBar/>
+        </div>
+      </Router>
+    );//use exact /signup doesnt bring along feed component
+  }
 }
 const mapStateToProps = (state) =>(
   {
@@ -66,28 +63,16 @@ function mapDispatchToProps(dispatch){
         payload:message
       })
     },
-    setChatters:(chatters)=>{
-      dispatch({
-        type:'SET_CHATTERS',
-        payload:chatters
-      })
-    },
-    setMessages:(messages)=>{
-      dispatch({
-        type:'SET_MESSAGES',
-        payload:messages
-      })
-    },
     addNotification:(user)=>{
       dispatch({
         type:"ADD_NOTIFICATION",
         payload:user
       })
     },
-    setNotifications:(notifications)=>{
+    addChatter:(chatter)=>{
       dispatch({
-        type:"SET_NOTIFICATIONS",
-        payload:notifications
+        type:"ADD_CHATTER",
+        payload:chatter
       })
     }
   }

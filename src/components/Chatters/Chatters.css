@@ -1,13 +1,15 @@
 .chattersList{
     display:flex;
     flex-direction:column;
-    background-color:white;
-    height:60%;
+    background-color:#e3e1e1;
+    height:100%;
+    width:40%;
   }
 #chatter{
-    border-bottom:2px solid red;
+    border-bottom:2px solid #bdbdbd;
 }
 #currentChatter{
-    background-color: gray;
-    border-bottom:2px solid red;
+    background-color:#bdbdbd;
+    /* background-color: gray; */
+    /* border-bottom:2px solid red; */
 }

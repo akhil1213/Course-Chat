@@ -20,7 +20,7 @@ class Chatters extends React.Component {
                         button
                         onClick={() => this.props.changeChatter(classmate)}
                     >
-                    <p>{classmate}</p><br></br>
+                    <p>{classmate}</p>
                     {notification!==-1 ? <p>{notifications[notification].message}</p> : null}
                     </ListItem>
                 )

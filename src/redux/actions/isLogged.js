@@ -5,6 +5,7 @@ import {returnErrors} from './errorActions'
 import jwt_decode from "jwt-decode";
 import {getClassesForUser} from './classActions'
 import { uri } from '../../uri'
+import getMessagesAndChatters from './messageActions';
 export function signIn(){
     return {
             type: SIGN_IN,
@@ -39,6 +40,7 @@ export const login = (dispatch,history,username,password) =>{
             //gets user token after logging in and same for sign up.
         })
         getClassesForUser(dispatch,username)
+        getMessagesAndChatters(dispatch,username)
         dispatch({
             type:'SIGN_IN'
         })
